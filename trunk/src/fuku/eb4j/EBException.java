@@ -65,7 +65,7 @@ public class EBException extends Exception {
      */
     public EBException(int code, Throwable cause) {
         this(_ERR_MSG[code] + " (" + cause.getMessage() + ")");
-        setStackTrace(cause.getStackTrace());
+        //setStackTrace(cause.getStackTrace());
     }
 
     /**
@@ -89,7 +89,7 @@ public class EBException extends Exception {
      */
     public EBException(int code, String msg, Throwable cause) {
         this(_ERR_MSG[code] + " (" + msg + ": " + cause.getMessage() + ")");
-        setStackTrace(cause.getStackTrace());
+        //setStackTrace(cause.getStackTrace());
     }
 
     /**

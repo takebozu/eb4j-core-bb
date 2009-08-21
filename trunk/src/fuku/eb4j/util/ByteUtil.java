@@ -2,6 +2,11 @@ package fuku.eb4j.util;
 
 import java.io.UnsupportedEncodingException;
 
+import net.cloudhunter.compat.java.lang.StringBuilder;
+import net.cloudhunter.compat.lang.CharacterUtil;
+import net.cloudhunter.compat.lang.StringUtil;
+
+
 /**
  * バイト操作ユーティリティクラス。
  *
@@ -259,10 +264,10 @@ public class ByteUtil {
         int len = str.length();
         StringBuilder buf = new StringBuilder(len);
         for (int i=0; i<len; i++) {
-            int codePoint = str.codePointAt(i);
-            if (Character.isSupplementaryCodePoint(codePoint)) {
+            int codePoint = StringUtil.codePointAt(str, i);
+            if (CharacterUtil.isSupplementaryCodePoint(codePoint)) {
                 buf.appendCodePoint(codePoint);
-                i = i + Character.charCount(codePoint) - 1;
+                i = i + CharacterUtil.charCount(codePoint) - 1;
                 continue;
             }
             switch (codePoint) {
@@ -296,10 +301,10 @@ public class ByteUtil {
         int len = str.length();
         StringBuilder buf = new StringBuilder(len);
         for (int i=0; i<len; i++) {
-            int codePoint = str.codePointAt(i);
-            if (Character.isSupplementaryCodePoint(codePoint)) {
+            int codePoint = StringUtil.codePointAt(str, i);
+            if (CharacterUtil.isSupplementaryCodePoint(codePoint)) {
                 buf.appendCodePoint(codePoint);
-                i = i + Character.charCount(codePoint) - 1;
+                i = i + CharacterUtil.charCount(codePoint) - 1;
                 continue;
             }
             switch (codePoint) {

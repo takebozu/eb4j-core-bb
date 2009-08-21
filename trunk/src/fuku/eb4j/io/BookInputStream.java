@@ -1,9 +1,12 @@
 package fuku.eb4j.io;
 
-import java.io.RandomAccessFile;
 import java.io.EOFException;
-import java.io.FileNotFoundException;
+
+
 import java.io.IOException;
+
+import net.cloudhunter.compat.java.io.FileNotFoundException;
+import net.cloudhunter.compat.java.io.RandomAccessFile;
 
 import fuku.eb4j.EBException;
 
@@ -41,15 +44,15 @@ public abstract class BookInputStream {
     }
 
 
-    /**
-     * このオブジェクトで使用されているシステムリソースを破棄します。
-     *
-     * @exception Throwable このメソッドで生じた例外
-     */
-    protected void finalize() throws Throwable {
-        close();
-        super.finalize();
-    }
+//    /**
+//     * このオブジェクトで使用されているシステムリソースを破棄します。
+//     *
+//     * @exception Throwable このメソッドで生じた例外
+//     */
+//    protected void finalize() throws Throwable {
+//        close();
+//        super.finalize();
+//    }
 
     /**
      * このファイルのファイルサイズを返します。
@@ -100,8 +103,8 @@ public abstract class BookInputStream {
             stream = new RandomAccessFile(info.getFile(), "r");
         } catch (FileNotFoundException e) {
             EBException exp =
-                new EBException(EBException.FILE_NOT_FOUND, info.getPath());
-            exp.setStackTrace(e.getStackTrace());
+                new EBException(EBException.FILE_NOT_FOUND, info.getPath() + ":" + e.getMessage());
+            //exp.setStackTrace(e.getStackTrace());
             throw exp;
         }
         filePos = 0;

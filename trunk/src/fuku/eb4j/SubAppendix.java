@@ -1,9 +1,10 @@
 package fuku.eb4j;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+
+import net.cloudhunter.compat.java.io.File;
+import net.cloudhunter.compat.java.util.HashMap;
+import net.cloudhunter.compat.java.util.Map;
 
 import fuku.eb4j.io.EBFile;
 import fuku.eb4j.io.BookInputStream;
@@ -37,8 +38,7 @@ public class SubAppendix {
     private int[] _stopCode = new int[2];
 
     /** 代替文字のキャッシュ */
-    private Map<Integer,Map<Integer,String>> _cache =
-        new HashMap<Integer,Map<Integer,String>>(2, (float)1.0);
+    private Map _cache = new HashMap(2, (float)1.0);	//Map<Integer,Map<Integer,String>>
 
 
     /**
@@ -105,7 +105,7 @@ public class SubAppendix {
                     _page[i] = -1;
                     _start[i] = -1;
                     _end[i] = -1;
-                    _cache.remove(Integer.valueOf(i));
+                    _cache.remove(new Integer(i));
                     continue;
                 }
                 _page[i] = ByteUtil.getLong4(b, 0);
@@ -133,8 +133,8 @@ public class SubAppendix {
                         throw new EBException(EBException.UNEXP_FILE, _file.getPath());
                     }
                 }
-                _cache.put(Integer.valueOf(i),
-                           new HashMap<Integer,String>(charCount, (float)1.0));
+                _cache.put(new Integer(i),
+                           new HashMap(charCount, (float)1.0));
             }
 
             // ストップコード情報の取得
@@ -233,8 +233,8 @@ public class SubAppendix {
             return null;
         }
 
-        Map<Integer,String> map = _cache.get(Integer.valueOf(kind));
-        String ret = map.get(Integer.valueOf(code));
+        Map map = (Map)_cache.get(new Integer(kind));
+        String ret = (String)map.get(new Integer(code));
         if (ret != null) {
             return ret;
         }
@@ -265,7 +265,7 @@ public class SubAppendix {
 
         try {
             ret = new String(b, "EUC-JP").trim();
-            map.put(Integer.valueOf(code), ret);
+            map.put(new Integer(code), ret);
         } catch (UnsupportedEncodingException e) {
         }
         return ret;

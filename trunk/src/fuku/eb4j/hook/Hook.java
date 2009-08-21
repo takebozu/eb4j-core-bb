@@ -5,7 +5,7 @@ package fuku.eb4j.hook;
  *
  * @author Hisaya FUKUMOTO
  */
-public interface Hook<T> {
+public interface Hook {
 
     /** 画像形式 (DIB) */
     int DIB = 0;
@@ -37,7 +37,7 @@ public interface Hook<T> {
      *
      * @return オブジェクト
      */
-    T getObject();
+    Object getObject();
 
     /**
      * 次の入力が可能かどうかを返します。

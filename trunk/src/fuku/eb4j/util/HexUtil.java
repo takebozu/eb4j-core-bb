@@ -1,6 +1,7 @@
 package fuku.eb4j.util;
 
-import java.util.Locale;
+import net.cloudhunter.compat.java.lang.StringBuilder;
+import net.cloudhunter.compat.lang.LongUtil;
 
 /**
  * HEXユーティリティクラス。
@@ -36,7 +37,7 @@ public class HexUtil {
      * @return 16進数表現の文字列
      */
     public static String toHexString(long val, int length) {
-        return toHexString(Long.toHexString(val), length);
+        return toHexString(LongUtil.toHexString(val), length);
     }
 
     /**
@@ -89,7 +90,7 @@ public class HexUtil {
      * @return 変換後の文字列
      */
     public static String toHexString(String str, int length) {
-        StringBuilder buf = new StringBuilder(str.toUpperCase(Locale.ENGLISH));
+        StringBuilder buf = new StringBuilder(str.toUpperCase());	//Locale.ENGLISH
         int len = length - str.length();
         for (int i=0; i<len; i++) {
             buf.insert(0, '0');

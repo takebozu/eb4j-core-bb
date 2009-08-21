@@ -29,7 +29,7 @@ public class PlainInputStream extends BookInputStream {
      *
      * @exception EBException 入出力エラーが発生した場合
      */
-    @Override
+//    @Override
     protected void initFileInfo() throws EBException {
         try {
             info.setRealFileSize(stream.length());
@@ -50,7 +50,7 @@ public class PlainInputStream extends BookInputStream {
      *         (ストリームの終わりに達してデータがない場合は-1)
      * @exception EBException 入出力エラーが発生した場合
      */
-    @Override
+//    @Override
     public int read(byte[] b, int off, int len) throws EBException {
         int rlen = 0;
         while (rlen < len) {

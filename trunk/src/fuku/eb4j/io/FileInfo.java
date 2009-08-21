@@ -1,6 +1,6 @@
 package fuku.eb4j.io;
 
-import java.io.File;
+import net.cloudhunter.compat.java.io.File;
 
 /**
  * ファイル情報クラス。

@@ -5,7 +5,7 @@ package fuku.eb4j.hook;
  *
  * @author Hisaya FUKUMOTO
  */
-public abstract class HookAdapter<T> implements Hook<T> {
+public abstract class HookAdapter implements Hook {
 
     /**
      * コンストラクタ。
@@ -20,7 +20,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * すべての入力をクリアし、初期化します。
      *
      */
-    @Override
+//    @Override
     public void clear() {
     }
 
@@ -29,8 +29,8 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @return 常にnull
      */
-    @Override
-    public T getObject() {
+//    @Override
+    public Object getObject() {
         return null;
     }
 
@@ -39,7 +39,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @return 常にfalse
      */
-    @Override
+//    @Override
     public boolean isMoreInput() {
         return false;
     }
@@ -49,9 +49,9 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param ch 文字
      */
-    @Override
+//    @Override
     public void append(char ch) {
-        append(Character.toString(ch));
+        append(String.valueOf(ch));
     }
 
     /**
@@ -59,7 +59,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param str 文字列
      */
-    @Override
+//    @Override
     public void append(String str) {
     }
 
@@ -68,7 +68,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param code 外字の文字コード
      */
-    @Override
+//    @Override
     public void append(int code) {
     }
 
@@ -76,7 +76,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 半角表示の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginNarrow() {
     }
 
@@ -84,7 +84,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 半角表示の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endNarrow() {
     }
 
@@ -92,7 +92,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 下付き表示の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginSubscript() {
     }
 
@@ -100,7 +100,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 下付き表示の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endSubscript() {
     }
 
@@ -108,7 +108,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 上付き表示の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginSuperscript() {
     }
 
@@ -116,7 +116,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 上付き表示の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endSuperscript() {
     }
 
@@ -125,7 +125,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param indent 字下げ量
      */
-    @Override
+//    @Override
     public void setIndent(int indent) {
     }
 
@@ -133,7 +133,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 改行を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void newLine() {
     }
 
@@ -141,7 +141,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 改行禁止の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginNoNewLine() {
     }
 
@@ -149,7 +149,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 改行禁止の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endNoNewLine() {
     }
 
@@ -157,7 +157,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 強調表示の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginEmphasis() {
     }
 
@@ -165,7 +165,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 強調表示の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endEmphasis() {
     }
 
@@ -176,7 +176,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @see #BOLD
      * @see #ITALIC
      */
-    @Override
+//    @Override
     public void beginDecoration(int type) {
     }
 
@@ -184,7 +184,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 文字修飾の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endDecoration() {
     }
 
@@ -192,7 +192,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 複合検索の候補となる語の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginCandidate() {
     }
 
@@ -202,7 +202,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param pos 次の階層の候補一覧データの位置
      */
-    @Override
+//    @Override
     public void endCandidateGroup(long pos) {
     }
 
@@ -211,7 +211,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 候補となる語が実際に検索の入力語として使えるものであることを示します。
      *
      */
-    @Override
+//    @Override
     public void endCandidateLeaf() {
     }
 
@@ -219,7 +219,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 別位置のテキストデータの参照開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginReference() {
     }
 
@@ -228,7 +228,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param pos 参照先の位置
      */
-    @Override
+//    @Override
     public void endReference(long pos) {
     }
 
@@ -236,7 +236,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * キーワード表示の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginKeyword() {
     }
 
@@ -244,7 +244,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * キーワード表示の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endKeyword() {
     }
 
@@ -254,7 +254,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @param width 画像の幅
      * @param height 画像の高さ
      */
-    @Override
+//    @Override
     public void beginMonoGraphic(int width, int height) {
     }
 
@@ -263,7 +263,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param pos 画像データの位置
      */
-    @Override
+//    @Override
     public void endMonoGraphic(long pos) {
     }
 
@@ -275,7 +275,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @see #DIB
      * @see #JPEG
      */
-    @Override
+//    @Override
     public void beginInlineColorGraphic(int format, long pos) {
     }
 
@@ -283,7 +283,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * インラインカラー画像の参照終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endInlineColorGraphic() {
     }
 
@@ -295,7 +295,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @see #DIB
      * @see #JPEG
      */
-    @Override
+//    @Override
     public void beginColorGraphic(int format, long pos) {
     }
 
@@ -303,7 +303,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * カラー画像の参照終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endColorGraphic() {
     }
 
@@ -316,7 +316,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @see #WAVE
      * @see #MIDI
      */
-    @Override
+//    @Override
     public void beginSound(int format, long start, long end) {
     }
 
@@ -324,7 +324,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 音声の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endSound() {
     }
 
@@ -336,7 +336,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @param height 動画の高さ
      * @param filename 動画ファイル名
      */
-    @Override
+//    @Override
     public void beginMovie(int format, int width, int height, String filename) {
     }
 
@@ -344,7 +344,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * 動画の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endMovie() {
     }
 
@@ -353,7 +353,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param pos 参照先の位置
      */
-    @Override
+//    @Override
     public void beginGraphicReference(long pos) {
     }
 
@@ -361,7 +361,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * カラー画像データ群の参照終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endGraphicReference() {
     }
 
@@ -370,7 +370,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      *
      * @param pos 参照先の位置
      */
-    @Override
+//    @Override
     public void setGraphicReference(long pos) {
     }
 
@@ -378,7 +378,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * カラー画像データ群の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginImagePage() {
     }
 
@@ -386,7 +386,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * カラー画像データ群の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endImagePage() {
     }
 
@@ -399,7 +399,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * @param h 高さ
      * @param pos 参照先の位置
      */
-    @Override
+//    @Override
     public void beginClickableArea(int x, int y, int w, int h, long pos) {
     }
 
@@ -407,7 +407,7 @@ public abstract class HookAdapter<T> implements Hook<T> {
      * クリック領域の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endClickableArea() {
     }
 }

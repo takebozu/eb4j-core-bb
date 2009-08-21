@@ -97,7 +97,7 @@ public class Result {
      * @return フックによって加工されたオブジェクト
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getHeading(Hook<T> hook) throws EBException {
+    public Object getHeading(Hook hook) throws EBException {
         return _sub.getHeading(_heading, hook);
     }
 
@@ -108,7 +108,7 @@ public class Result {
      * @return フックによって加工されたオブジェクト
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getText(Hook<T> hook) throws EBException {
+    public Object getText(Hook hook) throws EBException {
         return _sub.getText(_text, hook);
     }
 }

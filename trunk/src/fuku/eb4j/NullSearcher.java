@@ -21,7 +21,7 @@ public class NullSearcher implements Searcher {
      * @return 常にnull
      * @exception EBException 検索中にエラーが発生した場合
      */
-    @Override
+//    @Override
     public Result getNextResult() throws EBException {
         return null;
     }

@@ -1,8 +1,10 @@
 package fuku.eb4j.io;
 
 import java.io.IOException;
-import java.util.zip.Inflater;
-import java.util.zip.DataFormatException;
+
+import net.cloudhunter.compat.java.util.zip.DataFormatException;
+import net.cloudhunter.compat.java.util.zip.Inflater;
+
 
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
@@ -34,7 +36,7 @@ public class EBZipInputStream
      *
      * @exception EBException 入出力エラーが発生した場合
      */
-    @Override
+//    @Override
     protected void initFileInfo() throws EBException {
         try {
             info.setRealFileSize(stream.length());
@@ -97,7 +99,7 @@ public class EBZipInputStream
      *         (ストリームの終わりに達してデータがない場合は-1)
      * @exception EBException 入出力エラーが発生した場合
      */
-    @Override
+//    @Override
     public int read(byte[] b, int off, int len) throws EBException {
         int rlen = 0;
         while (rlen < len) {

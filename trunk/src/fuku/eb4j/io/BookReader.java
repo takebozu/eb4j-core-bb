@@ -11,7 +11,7 @@ import fuku.eb4j.util.ByteUtil;
  *
  * @author Hisaya FUKUMOTO
  */
-public class BookReader<T> {
+public class BookReader {
 
     /** 本文であることを示す定数 */
     private static final int TEXT = 0;
@@ -25,7 +25,7 @@ public class BookReader<T> {
     /** 読み込みストリーム */
     private BookInputStream _bis = null;
     /** フック */
-    private Hook<T> _hook = null;
+    private Hook _hook = null;
     /** ストップコード */
     private int _autoStopCode = -1;
     /** スキップコード */
@@ -39,7 +39,7 @@ public class BookReader<T> {
      * @param hook フック
      * @exception EBException 入出力エラーが発生した場合
      */
-    public BookReader(SubBook sub, Hook<T> hook) throws EBException {
+    public BookReader(SubBook sub, Hook hook) throws EBException {
         super();
         _sub = sub;
         _file = sub.getTextFile();
@@ -48,15 +48,15 @@ public class BookReader<T> {
     }
 
 
-    /**
-     * このオブジェクトで使用されているシステムリソースを破棄します。
-     *
-     * @exception Throwable このメソッドで生じた例外
-     */
-    protected void finalize() throws Throwable {
-        close();
-        super.finalize();
-    }
+//    /**
+//     * このオブジェクトで使用されているシステムリソースを破棄します。
+//     *
+//     * @exception Throwable このメソッドで生じた例外
+//     */
+//    protected void finalize() throws Throwable {
+//        close();
+//        super.finalize();
+//    }
 
     /**
      * この読み込みストリームを閉じます。
@@ -76,7 +76,7 @@ public class BookReader<T> {
      * @return フックで加工されたオブジェクト
      * @exception EBException 入出力エラーが発生した場合
      */
-    public T readHeading(long page, int offset) throws EBException {
+    public Object readHeading(long page, int offset) throws EBException {
         _hook.clear();
         _read(BookInputStream.getPosition(page, offset), HEADING, false);
         return _hook.getObject();
@@ -89,7 +89,7 @@ public class BookReader<T> {
      * @return フックで加工されたオブジェクト
      * @exception EBException 入出力エラーが発生した場合
      */
-    public T readHeading(long pos) throws EBException {
+    public Object readHeading(long pos) throws EBException {
         _hook.clear();
         _read(pos, HEADING, false);
         return _hook.getObject();
@@ -114,7 +114,7 @@ public class BookReader<T> {
      * @return フックで加工されたオブジェクト
      * @exception EBException 入出力エラーが発生した場合
      */
-    public T readText(long page, int offset) throws EBException {
+    public Object readText(long page, int offset) throws EBException {
         _hook.clear();
         _read(BookInputStream.getPosition(page, offset), TEXT, false);
         return _hook.getObject();
@@ -127,7 +127,7 @@ public class BookReader<T> {
      * @return フックで加工されたオブジェクト
      * @exception EBException 入出力エラーが発生した場合
      */
-    public T readText(long pos) throws EBException {
+    public Object readText(long pos) throws EBException {
         _hook.clear();
         _read(pos, TEXT, false);
         return _hook.getObject();

@@ -1,8 +1,8 @@
 package fuku.eb4j.io;
 
-import java.io.File;
+import net.cloudhunter.compat.java.io.File;
+import net.cloudhunter.compat.org.apache.commons.lang.ArrayUtils;
 
-import org.apache.commons.lang.ArrayUtils;
 
 import fuku.eb4j.EBException;
 
@@ -81,7 +81,12 @@ public class EBFile {
         if (!_info.getFile().canRead()) {
             throw new EBException(EBException.CANT_READ_FILE, _info.getPath());
         }
-        getInputStream().initFileInfo();
+        
+        //ファイルハンドルが開かれたままになってしまう問題を修正
+        //getInputStream().initFileInfo();
+        BookInputStream stream = getInputStream();
+        stream.initFileInfo();
+        stream.close();
     }
 
 
@@ -114,8 +119,7 @@ public class EBFile {
                 File f = new File(dir, list[i]);
                 if (!f.isDirectory()) {
                     continue;
-                }
-                if (list[i].equalsIgnoreCase(name)) {
+                } else if (list[i].equalsIgnoreCase(name)) {
                     d = f;
                     break;
                 }
