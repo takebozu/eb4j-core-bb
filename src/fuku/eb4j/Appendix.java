@@ -1,6 +1,6 @@
 package fuku.eb4j;
 
-import java.io.File;
+import net.cloudhunter.compat.java.io.File;
 
 import fuku.eb4j.io.EBFile;
 import fuku.eb4j.io.BookInputStream;

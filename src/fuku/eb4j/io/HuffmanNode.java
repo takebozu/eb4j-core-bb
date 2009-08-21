@@ -1,14 +1,14 @@
 package fuku.eb4j.io;
 
-import java.util.Collections;
-import java.util.List;
+import net.cloudhunter.compat.java.util.Collections;
+import net.cloudhunter.compat.java.util.List;
 
 /**
  * ハフマンノードクラス。
  *
  * @author Hisaya FUKUMOTO
  */
-public class HuffmanNode implements Comparable<HuffmanNode> {
+public class HuffmanNode { //implements Comparable {
 
     /** EOF葉ノード */
     protected static final int LEAF_EOF = 0;
@@ -149,9 +149,9 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
      *         このノードの頻度値が引数ノードの頻度値より小さい場合は0より小さい値、
      *         このノードの頻度値が引数ノードの頻度値より大きい場合は0より大きい値
      */
-    @Override
-    public int compareTo(HuffmanNode node) {
-        int ret = getFrequency() - node.getFrequency();
+//    @Override
+    public int compareTo(Object node) {
+        int ret = getFrequency() - ((HuffmanNode)node).getFrequency();
         return ret;
     }
 
@@ -161,16 +161,16 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
      * @param list HuffmanNodeのリスト
      * @return ルートノード
      */
-    protected static HuffmanNode makeTree(List<HuffmanNode> list) {
+    protected static HuffmanNode makeTree(List list) {	//List<HuffmanNode>
         HuffmanNode node1, node2, tmp;
 
         // ソート (選択ソート)
         int size = list.size();
         for (int i=0; i<size-1; i++) {
-            node1 = list.get(i);
+            node1 = (HuffmanNode)list.get(i);
             int n = i;
             for (int j=i+1; j<size; j++) {
-                tmp = list.get(j);
+                tmp = (HuffmanNode)list.get(j);
                 if (node1.compareTo(tmp) < 0) {
                     node1 = tmp;
                     n = j;
@@ -185,10 +185,10 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
         while (list.size() > 1) {
             // 頻度値が最も小さいノードの検索
             size = list.size();
-            node1 = list.get(0);
+            node1 = (HuffmanNode)list.get(0);
             int n = 0;
             for (int i=1; i<size; i++) {
-                tmp = list.get(i);
+                tmp = (HuffmanNode)list.get(i);
                 if (node1.compareTo(tmp) >= 0) {
                     node1 = tmp;
                     n = i;
@@ -198,10 +198,10 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
 
             // 頻度値が次に小さいノードの検索
             size = list.size();
-            node2 = list.get(0);
+            node2 = (HuffmanNode)list.get(0);
             n = 0;
             for (int i=1; i<size; i++) {
-                tmp = list.get(i);
+                tmp = (HuffmanNode)list.get(i);
                 if (node2.compareTo(tmp) >= 0) {
                     node2 = tmp;
                     n = i;
@@ -212,7 +212,7 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
             // 枝ノードの作成
             list.add(new HuffmanNode(node1, node2));
         }
-        return list.get(0);
+        return (HuffmanNode)list.get(0);
     }
 }
 

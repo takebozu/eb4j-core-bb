@@ -1,8 +1,8 @@
 package fuku.eb4j;
 
-import java.util.ArrayList;
+import net.cloudhunter.compat.java.util.ArrayList;
+import net.cloudhunter.compat.org.apache.commons.lang.ArrayUtils;
 
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * 複数検索語検索クラス。
@@ -61,7 +61,7 @@ public class MultiWordSearcher implements Searcher {
      */
     protected void search(byte[][] word) throws EBException {
         int len = word.length;
-        ArrayList<SingleWordSearcher> list = new ArrayList<SingleWordSearcher>(len);
+        ArrayList list = new ArrayList(len);
         SingleWordSearcher search;
         for (int i=0; i<len; i++) {
             if (!ArrayUtils.isEmpty(word[i])) {
@@ -74,7 +74,7 @@ public class MultiWordSearcher implements Searcher {
                 list.add(search);
             }
         }
-        _searcher = list.toArray(new SingleWordSearcher[list.size()]);
+        _searcher = (SingleWordSearcher[])list.toArray(new SingleWordSearcher[list.size()]);
     }
 
     /**
@@ -83,7 +83,7 @@ public class MultiWordSearcher implements Searcher {
      * @return 検索結果 (次の検索結果がない場合null)
      * @exception EBException 検索中にエラーが発生した場合
      */
-    @Override
+//    @Override
     public Result getNextResult() throws EBException {
         if (ArrayUtils.isEmpty(_searcher)) {
             return null;

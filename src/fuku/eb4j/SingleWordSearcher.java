@@ -1,15 +1,15 @@
 package fuku.eb4j;
 
-import java.io.UnsupportedEncodingException;
+//import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
 
 import fuku.eb4j.io.EBFile;
 import fuku.eb4j.io.BookInputStream;
 import fuku.eb4j.util.ByteUtil;
 import fuku.eb4j.util.CompareUtil;
-import fuku.eb4j.util.HexUtil;
+//import fuku.eb4j.util.HexUtil;
 
 /**
  * 単一検索語検索クラス。
@@ -39,8 +39,8 @@ public class SingleWordSearcher implements Searcher {
     /** 項目の配置スタイル */
     private static final int FIXED = 1;
 
-    /** ログ */
-    private Log _log = null;
+//    /** ログ */
+//    private Log _log = null;
 
     /** 副本 */
     private SubBook _sub = null;
@@ -99,7 +99,7 @@ public class SingleWordSearcher implements Searcher {
      */
     protected SingleWordSearcher(SubBook sub, IndexStyle style, int type) {
         super();
-        _log = LogFactory.getLog(getClass());
+//        _log = LogFactory.getLog(getClass());
         _sub = sub;
         _file = sub.getTextFile();
         _style = style;
@@ -139,11 +139,11 @@ public class SingleWordSearcher implements Searcher {
                 ByteUtil.reverseWord(_canonical);
             }
         }
-        try {
-            _log.debug("search word: '" + new String(_word, "x-JIS0208") + "'");
-            _log.debug("search canonical word: '" + new String(_canonical, "x-JIS0208") + "'");
-        } catch (UnsupportedEncodingException e) {
-        }
+//        try {
+//            _log.debug("search word: '" + new String(_word, "x-JIS0208") + "'");
+//            _log.debug("search canonical word: '" + new String(_canonical, "x-JIS0208") + "'");
+//        } catch (UnsupportedEncodingException e) {
+//        }
     }
 
     /**
@@ -184,12 +184,12 @@ public class SingleWordSearcher implements Searcher {
                 comp = CompareUtil.compareToByte(key, pattern, true);
                 break;
         }
-        try {
-            _log.debug("compare key word: (" + comp + ") '"
-                       + new String(key, "x-JIS0208") + "' '"
-                       + new String(pattern, "x-JIS0208") + "'");
-        } catch (UnsupportedEncodingException e) {
-        }
+//        try {
+//            _log.debug("compare key word: (" + comp + ") '"
+//                       + new String(key, "x-JIS0208") + "' '"
+//                       + new String(pattern, "x-JIS0208") + "'");
+//        } catch (UnsupportedEncodingException e) {
+//        }
         return comp;
     }
 
@@ -258,12 +258,12 @@ public class SingleWordSearcher implements Searcher {
                 }
                 break;
         }
-        try {
-            _log.debug("compare key word: (" + comp + ") '"
-                       + new String(key, "x-JIS0208") + "' '"
-                       + new String(pattern, "x-JIS0208") + "'");
-        } catch (UnsupportedEncodingException e) {
-        }
+//        try {
+//            _log.debug("compare key word: (" + comp + ") '"
+//                       + new String(key, "x-JIS0208") + "' '"
+//                       + new String(pattern, "x-JIS0208") + "'");
+//        } catch (UnsupportedEncodingException e) {
+//        }
         return comp;
     }
 
@@ -313,12 +313,12 @@ public class SingleWordSearcher implements Searcher {
                 }
                 break;
         }
-        try {
-            _log.debug("compare key word: (" + comp + ") '"
-                       + new String(key, "x-JIS0208") + "' '"
-                       + new String(pattern, "x-JIS0208") + "'");
-        } catch (UnsupportedEncodingException e) {
-        }
+//        try {
+//            _log.debug("compare key word: (" + comp + ") '"
+//                       + new String(key, "x-JIS0208") + "' '"
+//                       + new String(pattern, "x-JIS0208") + "'");
+//        } catch (UnsupportedEncodingException e) {
+//        }
         return comp;
     }
 
@@ -353,8 +353,8 @@ public class SingleWordSearcher implements Searcher {
                 _entryCount = ByteUtil.getInt2(_cache, 2);
                 _off = 4;
 
-                _log.debug("page=0x" + HexUtil.toHexString(_page)
-                           + ", ID=0x" + HexUtil.toHexString(_pageID));
+//                _log.debug("page=0x" + HexUtil.toHexString(_page)
+//                           + ", ID=0x" + HexUtil.toHexString(_pageID));
                 // リーフインデックスに達っしたらループ終了
                 if (_isLeafLayer(_pageID)) {
                     break;
@@ -395,11 +395,14 @@ public class SingleWordSearcher implements Searcher {
 
     /**
      * 次の検索結果を返します。
+     * 例えば広辞苑第五版でpageを検索したときに、PAGE、PAGEANT、PAGEPRINT、PAGEPRINTE、PAGEPRINTER
+     * の5つの結果が返るが、最後の3つは同じ見出しである。
+     * このような重複する結果を無視するロジックが呼び出し元に必要な場合がある。
      *
      * @return 検索結果 (次の検索結果がない場合null)
      * @exception EBException 検索中にエラーが発生した場合
      */
-    @Override
+//    @Override
     public Result getNextResult() throws EBException {
         if (_comparison < 0) {
             return null;
@@ -428,8 +431,8 @@ public class SingleWordSearcher implements Searcher {
                     _entryCount = ByteUtil.getInt2(_cache, 2);
                     _entryIndex = 0;
                     _off = 4;
-                    _log.debug("page=0x" + HexUtil.toHexString(_page)
-                               + ", ID=0x" + HexUtil.toHexString(_pageID));
+//                    _log.debug("page=0x" + HexUtil.toHexString(_page)
+//                               + ", ID=0x" + HexUtil.toHexString(_pageID));
                 }
             }
 

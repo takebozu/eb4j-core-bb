@@ -1,19 +1,21 @@
 package fuku.eb4j.hook;
 
-import org.apache.commons.lang.StringUtils;
 
+import net.cloudhunter.compat.java.lang.StringBuilder;
+import net.cloudhunter.compat.org.apache.commons.lang.StringUtils;
 import fuku.eb4j.SubAppendix;
 import fuku.eb4j.SubBook;
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
 import fuku.eb4j.util.HexUtil;
 
+
 /**
  * デフォルトエスケープシーケンス加工クラス。
  *
  * @author Hisaya FUKUMOTO
  */
-public class DefaultHook extends HookAdapter<String> {
+public class DefaultHook extends HookAdapter {
 
     /** 最大入力行数 */
     private int _maxLine = 500;
@@ -56,7 +58,7 @@ public class DefaultHook extends HookAdapter<String> {
      * すべての入力をクリアし、初期化します。
      *
      */
-    @Override
+//    @Override
     public void clear() {
         _buf.delete(0, _buf.length());
         _narrow = false;
@@ -68,8 +70,8 @@ public class DefaultHook extends HookAdapter<String> {
      *
      * @return 文字列オブジェクト
      */
-    @Override
-    public String getObject() {
+//    @Override
+    public Object getObject() {
         return _buf.toString();
     }
 
@@ -78,7 +80,7 @@ public class DefaultHook extends HookAdapter<String> {
      *
      * @return まだ入力を受けつける場合はtrue、そうでない場合はfalse
      */
-    @Override
+//    @Override
     public boolean isMoreInput() {
         if (_line >= _maxLine) {
             return false;
@@ -91,7 +93,7 @@ public class DefaultHook extends HookAdapter<String> {
      *
      * @param str 文字列
      */
-    @Override
+//    @Override
     public void append(String str) {
         if (_narrow) {
             str = ByteUtil.wideToNarrow(str);
@@ -106,7 +108,7 @@ public class DefaultHook extends HookAdapter<String> {
      *
      * @param code 外字の文字コード
      */
-    @Override
+//    @Override
     public void append(int code) {
         String str = null;
         if (_narrow) {
@@ -137,7 +139,7 @@ public class DefaultHook extends HookAdapter<String> {
      * 半角表示の開始を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void beginNarrow() {
         _narrow = true;
     }
@@ -146,7 +148,7 @@ public class DefaultHook extends HookAdapter<String> {
      * 半角表示の終了を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void endNarrow() {
         _narrow = false;
     }
@@ -155,7 +157,7 @@ public class DefaultHook extends HookAdapter<String> {
      * 改行を表すエスケープシーケンスに対するフックです。
      *
      */
-    @Override
+//    @Override
     public void newLine() {
         _buf.append('\n');
         _line++;

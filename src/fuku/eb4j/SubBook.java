@@ -1,9 +1,9 @@
 package fuku.eb4j;
 
-import java.io.File;
-import java.util.ArrayList;
+import net.cloudhunter.compat.java.io.File;
+import net.cloudhunter.compat.java.util.ArrayList;
+import net.cloudhunter.compat.org.apache.commons.lang.StringUtils;
 
-import org.apache.commons.lang.StringUtils;
 
 import fuku.eb4j.io.EBFile;
 import fuku.eb4j.io.BookInputStream;
@@ -256,7 +256,7 @@ public class SubBook {
         IndexStyle[] sebxa = new IndexStyle[2];
 
         // インデックススタイルの取得
-        ArrayList<IndexStyle> multi = new ArrayList<IndexStyle>(indexCount);
+        ArrayList multi = new ArrayList(indexCount);
         for (int i=0, off=16; i<indexCount; i++, off+=16) {
             IndexStyle style = new IndexStyle();
             int id = b[off] & 0xff;
@@ -405,7 +405,7 @@ public class SubBook {
             }
         }
         if (!multi.isEmpty()) {
-            _multiStyle = multi.toArray(new IndexStyle[multi.size()]);
+            _multiStyle = (IndexStyle[])multi.toArray(new IndexStyle[multi.size()]);
             _loadMulti();
             _loadMultiTitle();
         }
@@ -446,7 +446,7 @@ public class SubBook {
     private void _loadMulti() throws EBException {
         int len = _multiStyle.length;
         _entryStyle = new IndexStyle[len][];
-        ArrayList<IndexStyle> list = new ArrayList<IndexStyle>(len*4);
+        ArrayList list = new ArrayList(len*4);
         byte[] b = new byte[BookInputStream.PAGE_SIZE];
         BookInputStream bis = _text.getInputStream();
         try {
@@ -508,7 +508,7 @@ public class SubBook {
                     }
                     list.add(style);
                 }
-                _entryStyle[i] = list.toArray(new IndexStyle[list.size()]);
+                _entryStyle[i] = (IndexStyle[])list.toArray(new IndexStyle[list.size()]);
                 list.clear();
             }
         } finally {
@@ -770,11 +770,11 @@ public class SubBook {
      * @return フックによって加工されたオブジェクト
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getHeading(long pos, Hook<T> hook) throws EBException {
-        BookReader<T> reader = null;
-        T t = null;
+    public Object getHeading(long pos, Hook hook) throws EBException {
+        BookReader reader = null;
+        Object t = null;
         try {
-            reader = new BookReader<T>(this, hook);
+            reader = new BookReader(this, hook);
             t = reader.readHeading(pos);
         } finally {
             if (reader != null) {
@@ -792,10 +792,10 @@ public class SubBook {
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
     public long getNextHeadingPosition(long pos) throws EBException {
-        BookReader<Object> reader = null;
+        BookReader reader = null;
         long nextPos;
         try {
-            reader = new BookReader<Object>(this, null);
+            reader = new BookReader(this, null);
             nextPos = reader.nextHeadingPosition(pos);
         } finally {
             if (reader != null) {
@@ -813,11 +813,11 @@ public class SubBook {
      * @return フックによって加工されたオブジェクト
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getText(long pos, Hook<T> hook) throws EBException {
-        BookReader<T> reader = null;
-        T t = null;
+    public Object getText(long pos, Hook hook) throws EBException {
+        BookReader reader = null;
+        Object t = null;
         try {
-            reader = new BookReader<T>(this, hook);
+            reader = new BookReader(this, hook);
             t = reader.readText(pos);
         } finally {
             if (reader != null) {
@@ -835,14 +835,14 @@ public class SubBook {
      *         (メニュー表示がサポートされていない場合はnull)
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getMenu(Hook<T> hook) throws EBException {
+    public Object getMenu(Hook hook) throws EBException {
         if (!hasMenu()) {
             return null;
         }
-        BookReader<T> reader = null;
-        T t = null;
+        BookReader reader = null;
+        Object t = null;
         try {
-            reader = new BookReader<T>(this, hook);
+            reader = new BookReader(this, hook);
             t = reader.readText(_menuStyle.getStartPage(), 0);
         } finally {
             if (reader != null) {
@@ -860,14 +860,14 @@ public class SubBook {
      *         (イメージメニュー表示がサポートされていない場合はnull)
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getImageMenu(Hook<T> hook) throws EBException {
+    public Object getImageMenu(Hook hook) throws EBException {
         if (!hasImageMenu()) {
             return null;
         }
-        BookReader<T> reader = null;
-        T t = null;
+        BookReader reader = null;
+        Object t = null;
         try {
-            reader = new BookReader<T>(this, hook);
+            reader = new BookReader(this, hook);
             t = reader.readText(_imageMenuStyle.getStartPage(), 0);
         } finally {
             if (reader != null) {
@@ -885,14 +885,14 @@ public class SubBook {
      *         (著作権表示がサポートされていない場合はnull)
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      */
-    public <T> T getCopyright(Hook<T> hook) throws EBException {
+    public Object getCopyright(Hook hook) throws EBException {
         if (!hasCopyright()) {
             return null;
         }
-        BookReader<T> reader = null;
-        T t = null;
+        BookReader reader = null;
+        Object t = null;
         try {
-            reader = new BookReader<T>(this, hook);
+            reader = new BookReader(this, hook);
             t = reader.readText(_copyrightStyle.getStartPage(), 0);
         } finally {
             if (reader != null) {
@@ -1341,15 +1341,15 @@ public class SubBook {
      * @exception EBException ファイル読み込み中にエラーが発生した場合
      * @exception IllegalArgumentException インデックスの値が不当な場合
      */
-    public <T> T getCandidate(int multiIndex, int entryIndex,
-                              Hook<T> hook) throws EBException {
+    public Object getCandidate(int multiIndex, int entryIndex,
+                              Hook hook) throws EBException {
         if (!hasMultiEntryCandidate(multiIndex, entryIndex)) {
             return null;
         }
-        BookReader<T> reader = null;
-        T t = null;
+        BookReader reader = null;
+        Object t = null;
         try {
-            reader = new BookReader<T>(this, hook);
+            reader = new BookReader(this, hook);
             long page = _entryStyle[multiIndex][entryIndex].getCandidatePage();
             t = reader.readText(page, 0);
         } finally {
@@ -1402,7 +1402,7 @@ public class SubBook {
      * @return バイト配列
      */
     private byte[] _unescapeExtFontCode(String word) {
-        ArrayList<byte[]> list = new ArrayList<byte[]>(4);
+        ArrayList list = new ArrayList(4);
         String key = word.trim();
         int len = key.length();
         int size = 0;
@@ -1470,7 +1470,7 @@ public class SubBook {
         int pos = 0;
         int n = list.size();
         for (int i=0; i<n; i++) {
-            tmp = list.get(i);
+            tmp = (byte[])list.get(i);
             System.arraycopy(tmp, 0, b, pos, tmp.length);
             pos += tmp.length;
         }

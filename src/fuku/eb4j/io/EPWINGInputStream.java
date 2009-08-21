@@ -1,9 +1,9 @@
 package fuku.eb4j.io;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.ArrayList;
 
+import net.cloudhunter.compat.java.util.ArrayList;
+import net.rim.device.api.util.Arrays;
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
 
@@ -32,7 +32,7 @@ public class EPWINGInputStream extends BookInputStream {
      *
      * @exception EBException 入出力エラーが発生した場合
      */
-    @Override
+//    @Override
     protected void initFileInfo() throws EBException {
         try {
             info.setRealFileSize(stream.length());
@@ -83,10 +83,10 @@ public class EPWINGInputStream extends BookInputStream {
             leaf32 = (int)((info.getEpwingFrequencySize() - (leaf16 * 4L) - (256L * 2L)) / 6L);
         }
 
-        ArrayList<HuffmanNode> list = null;
+        ArrayList list = null;	// ArrayList<HuffmanNode>
         // 32bitデータのハフマンノード作成
         if (info.getFormat() == EBFile.FORMAT_EPWING6) {
-            list = new ArrayList<HuffmanNode>(leaf32 + leaf16 + 256 + 1);
+            list = new ArrayList(leaf32 + leaf16 + 256 + 1);	// ArrayList<HuffmanNode>
             len = b.length - (b.length % 6);
             try {
                 stream.seek(info.getEpwingFrequencyPosition());
@@ -104,7 +104,7 @@ public class EPWINGInputStream extends BookInputStream {
                 list.add(new HuffmanNode(value, freq, HuffmanNode.LEAF_32));
             }
         } else {
-            list = new ArrayList<HuffmanNode>(leaf16 + 256 + 1);
+            list = new ArrayList(leaf16 + 256 + 1);	//ArrayList<HuffmanNode>
         }
 
         // 16bitデータのハフマンノード作成
@@ -156,7 +156,7 @@ public class EPWINGInputStream extends BookInputStream {
      *         (ストリームの終わりに達してデータがない場合は-1)
      * @exception EBException 入出力エラーが発生した場合
      */
-    @Override
+//    @Override
     public int read(byte[] b, int off, int len) throws EBException {
         int rlen = 0;
         while (rlen < len) {
@@ -268,7 +268,8 @@ public class EPWINGInputStream extends BookInputStream {
             if (node.getLeafType() == HuffmanNode.LEAF_EOF) {
                 // 残りを埋める
                 if (outLen < PAGE_SIZE) {
-                    Arrays.fill(cache, outPos, cache.length, (byte)'\0');
+                    //Arrays.fill(cache, outPos, cache.length, (byte)'\0');	
+                	Arrays.fill(cache, (byte)'\0', outPos, cache.length);
                 }
                 break;
             } else if (node.getLeafType() == HuffmanNode.LEAF_32) {
