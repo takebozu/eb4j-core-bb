@@ -688,9 +688,9 @@ public class SubBook {
      * @return 画像データ
      */
     public GraphicData getGraphicData() {
-        return new GraphicData(_graphic);
+        return new GraphicData(_text, _graphic);
     }
-
+    
     /**
      * この副本の音声データを返します。
      *
