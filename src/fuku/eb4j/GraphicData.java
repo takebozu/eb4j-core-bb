@@ -15,7 +15,8 @@ public class GraphicData {
     private static final int COLOR_GRAPHIC_HEADER = 8;
 
     /** バイナリデータファイル */
-    private EBFile _file = null;
+    private EBFile _text = null;
+    private EBFile _graphic = null;
 
 
     /**
@@ -23,9 +24,10 @@ public class GraphicData {
      *
      * @param file 画像データファイル
      */
-    protected GraphicData(EBFile file) {
+    protected GraphicData(EBFile text, EBFile graphic) {
         super();
-        _file = file;
+        _text = text;
+        _graphic = graphic;
     }
 
 
@@ -40,7 +42,7 @@ public class GraphicData {
      */
     public byte[] getMonoGraphic(long pos, int width, int height) throws EBException {
         byte[] img = null;
-        BookInputStream bis = _file.getInputStream();
+        BookInputStream bis = _text.getInputStream();
         try {
             // 幅、高さが0の場合、幅、高さ、位置を読み出す
             if (width == 0 && height == 0) {
@@ -49,7 +51,7 @@ public class GraphicData {
                 bis.readFully(b, 0, b.length);
                 if (ByteUtil.getInt2(b, 0) != 0x1f45
                     || ByteUtil.getInt2(b, 4) != 0x1f31) {
-                    throw new EBException(EBException.UNEXP_FILE, _file.getPath());
+                    throw new EBException(EBException.UNEXP_FILE, _text.getPath());
                 }
                 width = ByteUtil.getBCD2(b, 8);
                 height = ByteUtil.getBCD2(b, 10);
@@ -60,7 +62,7 @@ public class GraphicData {
                     pos = BookInputStream.getPosition(ByteUtil.getBCD4(b, 16),
                                                       ByteUtil.getBCD2(b, 20));
                 } else {
-                    throw new EBException(EBException.UNEXP_FILE, _file.getPath());
+                    throw new EBException(EBException.UNEXP_FILE, _text.getPath());
                 }
             }
 
@@ -87,7 +89,7 @@ public class GraphicData {
      */
     public byte[] getColorGraphic(long pos) throws EBException {
         byte[] img = null;
-        BookInputStream bis = _file.getInputStream();
+        BookInputStream bis = _graphic.getInputStream();
         try {
             bis.seek(pos);
             byte[] b = new byte[COLOR_GRAPHIC_HEADER];
