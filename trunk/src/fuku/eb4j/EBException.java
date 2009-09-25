@@ -3,15 +3,13 @@ package fuku.eb4j;
 /**
  * 書籍例外クラス。
  *
- * @author Hisaya FUKUMOTO
+ * @author Hisaya FUKUMOTO & CloudHunter
  */
 public class EBException extends Exception {
-
     /** エラーコード (ディレクトリが見つからない) */
     public static final int DIR_NOT_FOUND = 0;
     /** エラーコード (ディレクトリが読めない) */
     public static final int CANT_READ_DIR = 1;
-
     /** エラーコード (ファイルが見つからない) */
     public static final int FILE_NOT_FOUND = 2;
     /** エラーコード (ファイルが読めない) */
@@ -23,29 +21,43 @@ public class EBException extends Exception {
     /** エラーコード (ファイルシークエラー) */
     public static final int FAILED_SEEK_FILE = 6;
 
-    /** エラーメッセージ */
-    private static final String[] _ERR_MSG = {
-        "directory not found",
-        "can't read directory",
-
-        "file not found",
-        "can't read a file",
-        "failed to read a file",
-        "unexpected format in a file",
-        "failed to seek a file"
-    };
-
+    /** エラーコード (CATALOGファイルに記載されたディレクトリが１つも見つからない) */
+    public static final int DIRS_IN_CATALOG_NOT_FOUND = 1001;
+    
+    /** エラーコードの保持用 */
+    private int code = -1;
 
     /**
-     * 指定されたメッセージを持つEBExceptionを構築します。<BR>
-     * メッセージ: "msg"
-     *
-     * @param msg 詳細メッセージ
+     * 標準で用意されたメッセージを返します。
+     * @param code エラーコード
+     * @return 標準エラーメッセージ
      */
-    public EBException(String msg) {
-        super(msg);
+    private static String getStandardMessage(int code) {
+    	final String[] standardMsgs = {
+    	        "directory not found",
+    	        "can't read directory",
+    	        "file not found",
+    	        "can't read a file",
+    	        "failed to read a file",
+    	        "unexpected format in a file",
+    	        "failed to seek a file"
+    	    };
+    	
+    	if(code >=0 && code < standardMsgs.length) {
+    		return standardMsgs[code];
+    	} else {
+    		return "code=" + String.valueOf(code);
+    	}
     }
-
+    
+    /**
+	 * エラーコードを取得する。
+	 * @return エラーコード
+	 */
+    public int getCode(){
+    	return code;
+    }
+    
     /**
      * 指定されたエラーコードを持つEBExceptionを構築します。<BR>
      * メッセージ: "ERR_MSG"
@@ -53,7 +65,8 @@ public class EBException extends Exception {
      * @param code エラーコード
      */
     public EBException(int code) {
-        this(_ERR_MSG[code]);
+        super(getStandardMessage(code));
+    	this.code = code;
     }
 
     /**
@@ -64,8 +77,8 @@ public class EBException extends Exception {
      * @param cause 原因
      */
     public EBException(int code, Throwable cause) {
-        this(_ERR_MSG[code] + " (" + cause.getMessage() + ")");
-        //setStackTrace(cause.getStackTrace());
+        super(getStandardMessage(code) + " (" + cause.getMessage() + ")");
+    	this.code = code;
     }
 
     /**
@@ -76,7 +89,8 @@ public class EBException extends Exception {
      * @param msg 追加メッセージ
      */
     public EBException(int code, String msg) {
-        this(_ERR_MSG[code] + " (" + msg + ")");
+        super(getStandardMessage(code) + " (" + msg + ")");
+    	this.code = code;
     }
 
     /**
@@ -88,8 +102,8 @@ public class EBException extends Exception {
      * @param cause 原因
      */
     public EBException(int code, String msg, Throwable cause) {
-        this(_ERR_MSG[code] + " (" + msg + ": " + cause.getMessage() + ")");
-        //setStackTrace(cause.getStackTrace());
+        super(getStandardMessage(code) + " (" + msg + ": " + cause.getMessage() + ")");
+    	this.code = code;
     }
 
     /**
@@ -101,7 +115,8 @@ public class EBException extends Exception {
      * @param msg2 追加メッセージ2
      */
     public EBException(int code, String msg1, String msg2) {
-        this(_ERR_MSG[code] + " (" + msg1 + ": " + msg2 + ")");
+        super(getStandardMessage(code) + " (" + msg1 + ": " + msg2 + ")");
+    	this.code = code;
     }
 }
 
