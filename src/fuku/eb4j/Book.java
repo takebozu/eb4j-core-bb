@@ -1,12 +1,9 @@
 package fuku.eb4j;
 
-import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.io.File;
-import net.cloudhunter.compat.java.util.ArrayList;
-import net.cloudhunter.compat.java.util.List;
-import net.rim.device.api.system.EventLogger;
-import fuku.eb4j.io.BookInputStream;
+
 import fuku.eb4j.io.EBFile;
+import fuku.eb4j.io.BookInputStream;
 import fuku.eb4j.util.ByteUtil;
 
 /**
@@ -245,7 +242,6 @@ public class Book {
      * @exception EBException CATALOGファイルの読み込み中にエラーが発生した場合
      */
     private void _loadCatalogEB(EBFile file) throws EBException {
-    	List subBooks = new ArrayList();
         BookInputStream bis = file.getInputStream();
         try {
             byte[] b = new byte[16];
@@ -258,6 +254,7 @@ public class Book {
             }
 
             // 副本の情報を取得
+            _sub = new SubBook[subCount];
             b = new byte[SIZE_CATALOG[DISC_EB]];
             for (int i=0; i<subCount; i++) {
                 bis.readFully(b, 0, b.length);
@@ -290,22 +287,12 @@ public class Book {
                 int[] format = new int[3];
                 fname[0] = "start";
                 format[0] = EBFile.FORMAT_PLAIN;
-                try {
-                	subBooks.add(new SubBook(this, title, name, 1, fname, format, null, null));
-                } catch(EBException e) {
-                	//ディレクトリが存在しないなどの理由で、副本の初期化に失敗した場合
-                	EBLogger.log("Skipped sub book\n-dir:" + name + "\n-catalog file:" + file.getPath(), EventLogger.WARNING);
-                }
+                _sub[i] = new SubBook(this, title, name, 1,
+                                      fname, format, null, null);
             }
         } finally {
             bis.close();
         }
-
-        if(subBooks.size() == 0) {
-        	EBLogger.log("No sub book directory found.\n-catalog file:" + file.getPath(), EventLogger.ERROR);
-        	throw new EBException(EBException.DIRS_IN_CATALOG_NOT_FOUND);
-        }
-        _sub = (SubBook[])subBooks.toArray(new SubBook[subBooks.size()]);
     }
 
     /**
@@ -315,7 +302,6 @@ public class Book {
      * @exception EBException CATALOGSファイルの読み込み中にエラーが発生した場合
      */
     private void _loadCatalogEPWING(EBFile file) throws EBException {
-    	List subBooks = new ArrayList();
         BookInputStream bis = file.getInputStream();
         try {
             byte[] b = new byte[16];
@@ -331,6 +317,7 @@ public class Book {
             _version = ByteUtil.getInt2(b, 2);
 
             // 副本の情報を取得
+            _sub = new SubBook[subCount];
             b = new byte[SIZE_CATALOG[DISC_EPWING]];
             for (int i=0; i<subCount; i++) {
                 bis.seek(16 + i * b.length);
@@ -434,23 +421,12 @@ public class Book {
                 }
 
                 // 副本オブジェクトの作成
-                try {
-                	subBooks.add(new SubBook(this, title, name, index, fname, format, narrow, wide));
-                } catch(EBException e) {
-                	//ディレクトリが存在しないなどの理由で、副本の初期化に失敗した場合
-                	//⇒その副本はスキップする
-                	EBLogger.log("Skipped sub book\n-dir:" + name + "\n-catalogs file:" + file.getPath(), EventLogger.WARNING);
-                }
+                _sub[i] = new SubBook(this, title, name, index,
+                                      fname, format, narrow, wide);
             }
         } finally {
             bis.close();
         }
-        
-        if(subBooks.size() == 0) {
-        	EBLogger.log("No sub book directory found.\n-catalogs file:" + file.getPath(), EventLogger.ERROR);
-        	throw new EBException(EBException.DIRS_IN_CATALOG_NOT_FOUND);
-        }
-        _sub = (SubBook[])subBooks.toArray(new SubBook[subBooks.size()]);
     }
 
     /**
