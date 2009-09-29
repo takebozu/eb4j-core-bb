@@ -2,6 +2,7 @@ package fuku.eb4j;
 
 import java.io.UnsupportedEncodingException;
 
+import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.io.File;
 import net.cloudhunter.compat.java.util.HashMap;
 import net.cloudhunter.compat.java.util.Map;
@@ -267,6 +268,7 @@ public class SubAppendix {
             ret = new String(b, "EUC-JP").trim();
             map.put(new Integer(code), ret);
         } catch (UnsupportedEncodingException e) {
+        	EBLogger.log("Unsupported encoding:EUC-JP");
         }
         return ret;
     }
