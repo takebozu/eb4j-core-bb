@@ -2,6 +2,7 @@ package fuku.eb4j.util;
 
 import java.io.UnsupportedEncodingException;
 
+import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.lang.StringBuilder;
 import net.cloudhunter.compat.lang.CharacterUtil;
 import net.cloudhunter.compat.lang.StringUtil;
@@ -391,6 +392,7 @@ public class ByteUtil {
         try {
             str = new String(buf, "EUC-CN");
         } catch (UnsupportedEncodingException e) {
+        	EBLogger.log("Unsupported encoding:EUC-CN");
             str = new String(buf);
         }
         return str.trim();
@@ -428,6 +430,7 @@ public class ByteUtil {
         try {
             str = new String(buf, "EUC-JP");
         } catch (UnsupportedEncodingException e) {
+        	EBLogger.log("Unsupported encoding:EUC-JP");
             str = new String(buf);
         }
         return str.trim();
@@ -464,6 +467,7 @@ public class ByteUtil {
         try {
             b = buf.toString().getBytes("EUC-JP");
         } catch (UnsupportedEncodingException e) {
+        	EBLogger.log("Unsupported encoding:EUC-JP");
             b = buf.toString().getBytes();
         }
 
