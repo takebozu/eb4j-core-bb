@@ -1,14 +1,18 @@
 package fuku.eb4j.io;
 
+import net.cloudhunter.bb.EBLogger;
+import net.cloudhunter.compat.java.lang.Comparable;
+import net.cloudhunter.compat.java.util.ArrayList;
 import net.cloudhunter.compat.java.util.Collections;
 import net.cloudhunter.compat.java.util.List;
+import net.rim.device.api.system.EventLogger;
 
 /**
  * ハフマンノードクラス。
  *
  * @author Hisaya FUKUMOTO
  */
-public class HuffmanNode { //implements Comparable {
+public class HuffmanNode implements Comparable {
 
     /** EOF葉ノード */
     protected static final int LEAF_EOF = 0;
@@ -162,17 +166,17 @@ public class HuffmanNode { //implements Comparable {
      * @return ルートノード
      */
     protected static HuffmanNode makeTree(List list) {	//List<HuffmanNode>
-        HuffmanNode node1, node2, tmp;
+    	EBLogger.log("[S]makeTree", EventLogger.DEBUG_INFO);
 
-        // ソート (選択ソート)
+        // ソート (選択ソート：大->小)
         int size = list.size();
         for (int i=0; i<size-1; i++) {
-            node1 = (HuffmanNode)list.get(i);
+        	HuffmanNode current = (HuffmanNode)list.get(i);
             int n = i;
             for (int j=i+1; j<size; j++) {
-                tmp = (HuffmanNode)list.get(j);
-                if (node1.compareTo(tmp) < 0) {
-                    node1 = tmp;
+            	HuffmanNode tmp = (HuffmanNode)list.get(j);
+                if (current.compareTo(tmp) < 0) {
+                	current = tmp;
                     n = j;
                 }
             }
@@ -180,39 +184,43 @@ public class HuffmanNode { //implements Comparable {
                 Collections.swap(list, i, n);
             }
         }
+        List sortedList = new SortedList((ArrayList)list);
 
         // ハフマンツリーの作成
-        while (list.size() > 1) {
-            // 頻度値が最も小さいノードの検索
-            size = list.size();
-            node1 = (HuffmanNode)list.get(0);
-            int n = 0;
-            for (int i=1; i<size; i++) {
-                tmp = (HuffmanNode)list.get(i);
-                if (node1.compareTo(tmp) >= 0) {
-                    node1 = tmp;
-                    n = i;
-                }
-            }
-            list.remove(n);
-
-            // 頻度値が次に小さいノードの検索
-            size = list.size();
-            node2 = (HuffmanNode)list.get(0);
-            n = 0;
-            for (int i=1; i<size; i++) {
-                tmp = (HuffmanNode)list.get(i);
-                if (node2.compareTo(tmp) >= 0) {
-                    node2 = tmp;
-                    n = i;
-                }
-            }
-            list.remove(n);
-
-            // 枝ノードの作成
-            list.add(new HuffmanNode(node1, node2));
+        while (sortedList.size() > 1) {
+        	int lastIndex = sortedList.size() - 1;
+        	HuffmanNode node1 = (HuffmanNode)sortedList.get(lastIndex);
+        	sortedList.remove(lastIndex);
+        	
+        	lastIndex = sortedList.size() - 1;
+        	HuffmanNode node2 = (HuffmanNode)sortedList.get(lastIndex);
+        	sortedList.remove(lastIndex);
+        	
+        	sortedList.add(new HuffmanNode(node1, node2));
         }
-        return (HuffmanNode)list.get(0);
+
+        EBLogger.log("[E]makeTree", EventLogger.DEBUG_INFO);
+        return (HuffmanNode)sortedList.get(0);
+    }
+
+    /**
+     * 降順ソートされたArrayList。
+     */
+    private static class SortedList extends ArrayList {
+    	public SortedList(ArrayList list) {
+    		super(list);
+    	}
+    	
+    	public boolean add(Object o) {
+    		for(int i=_vector.size()-1; i>=0; i--) {
+    			if( ((Comparable)_vector.elementAt(i)).compareTo(o) >= 0) {
+    				_vector.insertElementAt(o, i+1);
+    				return true;
+    			}
+    		}
+    		_vector.insertElementAt(o, 0);
+    		return true;
+    	}
     }
 }
 

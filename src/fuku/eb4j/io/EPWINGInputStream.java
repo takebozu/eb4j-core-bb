@@ -3,6 +3,7 @@ package fuku.eb4j.io;
 import java.io.IOException;
 
 import net.cloudhunter.compat.java.util.ArrayList;
+import net.cloudhunter.compat.java.util.List;
 import net.rim.device.api.util.Arrays;
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
@@ -83,7 +84,7 @@ public class EPWINGInputStream extends BookInputStream {
             leaf32 = (int)((info.getEpwingFrequencySize() - (leaf16 * 4L) - (256L * 2L)) / 6L);
         }
 
-        ArrayList list = null;	// ArrayList<HuffmanNode>
+        List list = null;	// ArrayList<HuffmanNode>
         // 32bitデータのハフマンノード作成
         if (info.getFormat() == EBFile.FORMAT_EPWING6) {
             list = new ArrayList(leaf32 + leaf16 + 256 + 1);	// ArrayList<HuffmanNode>

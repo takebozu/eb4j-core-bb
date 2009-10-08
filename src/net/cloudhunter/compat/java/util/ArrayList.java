@@ -3,10 +3,14 @@ package net.cloudhunter.compat.java.util;
 import java.util.Vector;
 
 public class ArrayList implements List {
-	private Vector _vector = null;
+	protected Vector _vector = null;
 	
 	public ArrayList() {
 		_vector = new Vector();
+	}
+
+	public ArrayList(ArrayList list) {
+		_vector = list._vector;
 	}
 
 	public ArrayList(int initialCapacity) {
@@ -25,11 +29,6 @@ public class ArrayList implements List {
 	public int size() {
 		return _vector.size();
 	}
-	
-//	public Object[] toArray() {
-//		return toArray(new Object[_vector.size()]);
-//		
-//	}
 
 	public Object[] toArray(Object[] a) {
 		Object[] results = a;
