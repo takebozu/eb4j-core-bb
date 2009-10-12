@@ -269,8 +269,9 @@ public class EPWINGInputStream extends BookInputStream {
             if (node.getLeafType() == HuffmanNode.LEAF_EOF) {
                 // 残りを埋める
                 if (outLen < PAGE_SIZE) {
-                    //Arrays.fill(cache, outPos, cache.length, (byte)'\0');	
-                	Arrays.fill(cache, (byte)'\0', outPos, cache.length);
+                    //Arrays.fill(cache, outPos, cache.length, (byte)'\0');		//original
+                	//Arrays.fill(cache, (byte)'\0', outPos, cache.length);		//prev release
+                	Arrays.fill(cache, (byte)'\0', outPos, cache.length - outPos);
                 }
                 break;
             } else if (node.getLeafType() == HuffmanNode.LEAF_32) {
