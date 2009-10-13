@@ -292,6 +292,7 @@ public class Book {
                     title = ByteUtil.jisx0208ToString(b, off,
                                                       SIZE_TITLE[DISC_EB]);
                 }
+                off += SIZE_TITLE[DISC_EB];
 
                 // ディレクトリ名の取得
                 String name = new String(b, off, SIZE_DIRNAME).trim();
