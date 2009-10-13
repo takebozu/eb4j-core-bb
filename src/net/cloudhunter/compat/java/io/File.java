@@ -1,6 +1,7 @@
 package net.cloudhunter.compat.java.io;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
 import javax.microedition.io.Connector;
@@ -18,11 +19,11 @@ public class File {
 	public static final char PATH_SEPARATOR = '/';
 	
 	public File(String pathname) {
-		_pathname = pathname;
+		_pathname = urlEncode(pathname);
 	}
 	
 	public File(File parent, String child) {
-		_pathname = parent.getPath() + PATH_SEPARATOR + child;
+		_pathname = parent.getPath() + PATH_SEPARATOR + urlEncode(child);
 	}
 	
 	/**
@@ -119,5 +120,44 @@ public class File {
 	
 	public String getPath() {
 		return _pathname;
+	}
+	
+	/**
+	 * encode URL
+	 * @param value url
+	 * @return encoded url
+	 */
+	private static String urlEncode(String value) {
+		StringBuffer buf = new StringBuffer();
+		byte[] utf;
+		try {
+			utf = value.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			utf = value.getBytes(); //基本的にはここには来ない
+		}
+		for (int i = 0; i < utf.length; ++i) {
+			char b = (char) utf[i];
+			if (b == ' ') {
+				buf.append('+');
+			} else if (isRFC3986Unreserved(b)) {
+				buf.append(b);
+			} else {
+				buf.append('%');
+				buf.append(Integer.toHexString(b & 0xff).toUpperCase()); // u.c. per RFC 3986
+			}
+		}
+		return buf.toString();
+	}
+
+	/**
+	 * エンコードすべき文字かどうかを判定
+	 * @param b
+	 * @return エンコードすべき文字の場合true
+	 */
+	private static boolean isRFC3986Unreserved(char b) {
+		return (b >= 'A' && b <= 'Z')
+			|| (b >= 'a' && b <= 'z')
+			|| Character.isDigit(b)
+			|| ".-~_/:%".indexOf(b) >= 0;
 	}
 }
