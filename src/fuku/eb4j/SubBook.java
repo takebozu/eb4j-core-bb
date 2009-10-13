@@ -427,11 +427,11 @@ public class SubBook {
             for (int i=0; i<len; i++) {
                 _fonts[i] = new ExtFont(this, i);
                 long page = fontPage[i][0];
-                if (page < 0) {
+                if (page >= 0) {
                     _fonts[i].setWideFont(_text, page);
                 }
                 page = fontPage[i][1];
-                if (page < 0) {
+                if (page >= 0) {
                     _fonts[i].setNarrowFont(_text, page);
                 }
             }
