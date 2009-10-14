@@ -1,7 +1,5 @@
 package fuku.eb4j.io;
 
-import net.cloudhunter.bb.EBLogger;
-import net.rim.device.api.system.EventLogger;
 import fuku.eb4j.Book;
 import fuku.eb4j.EBException;
 import fuku.eb4j.SubBook;
