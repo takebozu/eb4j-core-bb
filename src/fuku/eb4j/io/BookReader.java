@@ -1,8 +1,10 @@
 package fuku.eb4j.io;
 
+import net.cloudhunter.bb.EBLogger;
+import net.rim.device.api.system.EventLogger;
 import fuku.eb4j.Book;
-import fuku.eb4j.SubBook;
 import fuku.eb4j.EBException;
+import fuku.eb4j.SubBook;
 import fuku.eb4j.hook.Hook;
 import fuku.eb4j.util.ByteUtil;
 
@@ -17,6 +19,9 @@ public class BookReader {
     private static final int TEXT = 0;
     /** 見出しであることを示す定数 */
     private static final int HEADING = 1;
+
+    /** 読み込み時のブロックサイズ */
+    private static final int BLOCK_SIZE = 32;
 
     /** 副本 */
     private SubBook _sub = null;
@@ -146,7 +151,7 @@ public class BookReader {
         _bis.seek(pos);
 
         // データの読み込み
-        byte[] b = new byte[BookInputStream.PAGE_SIZE];
+        byte[] b = new byte[BLOCK_SIZE];
         int len = _bis.read(b, 0, b.length);
         if (len < 0) {
             return -1;
