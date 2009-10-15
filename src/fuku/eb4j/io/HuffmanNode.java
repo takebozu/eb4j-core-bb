@@ -204,7 +204,8 @@ public class HuffmanNode implements Comparable {
     }
 
     /**
-     * 降順ソートされたArrayList。
+     * 降順ソート（大->小）されたArrayList。
+     * 同じ値の場合、先に入った方がindexの若い方にある。
      */
     private static class SortedList extends ArrayList {
     	public SortedList(ArrayList list) {
