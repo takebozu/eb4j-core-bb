@@ -3,7 +3,6 @@ package fuku.eb4j.io;
 import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.lang.Comparable;
 import net.cloudhunter.compat.java.util.ArrayList;
-import net.cloudhunter.compat.java.util.Collections;
 import net.cloudhunter.compat.java.util.List;
 import net.rim.device.api.system.EventLogger;
 
@@ -182,7 +181,7 @@ public class HuffmanNode implements Comparable {
      * @param list HuffmanNodeのリスト
      * @return ルートノード
      */
-    protected static HuffmanNode makeTree(List list) {	//List<HuffmanNode>
+    protected static HuffmanNode makeTree(SelectionSort list) {	//List<HuffmanNode>
     	EBLogger.log("[S]makeTree", EventLogger.DEBUG_INFO);
 
 //        // ソート (選択ソート：大->小)
@@ -202,15 +201,15 @@ public class HuffmanNode implements Comparable {
 //            }
 //        }
     	
-    	SelectionSort slist = new SelectionSort();
-    	for(int i=0; i<list.size(); i++) {
-    		slist.add(list.get(i));
-    	}
-    	slist.doSort();
+//    	SelectionSort slist = new SelectionSort();
+//    	for(int i=0; i<list.size(); i++) {
+//    		slist.add(list.get(i));
+//    	}
+    	list.doSort();
     	
 
         // ハフマンツリーの作成
-    	List sortedList = new SortedList((ArrayList)slist);
+    	List sortedList = new SortedList((ArrayList)list);
         while (sortedList.size() > 1) {
         	int lastIndex = sortedList.size() - 1;
         	HuffmanNode node1 = (HuffmanNode)sortedList.get(lastIndex);

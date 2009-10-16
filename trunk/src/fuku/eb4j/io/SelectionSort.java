@@ -3,7 +3,6 @@ package fuku.eb4j.io;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import net.cloudhunter.compat.java.lang.Comparable;
 import net.cloudhunter.compat.java.util.ArrayList;
 import net.cloudhunter.compat.java.util.Collections;
 
@@ -16,7 +15,11 @@ public class SelectionSort extends ArrayList {
 		_sortedFreqs = new Vector();
 		_map = new Hashtable();
 	}
-	
+
+	public SelectionSort(int size) {
+		this();
+	}
+
 	public boolean add(Object o) {
 		addIndex((HuffmanNode)o);
 		addSortedFreqs((HuffmanNode)o);
