@@ -82,10 +82,10 @@ public class EPWINGInputStream extends BookInputStream {
             leaf32 = (int)((info.getEpwingFrequencySize() - (leaf16 * 4L) - (256L * 2L)) / 6L);
         }
 
-        SelectionSort list = null;	// ArrayList<HuffmanNode>
+        HuffmanTree list = null;	// ArrayList<HuffmanNode>
         // 32bitデータのハフマンノード作成
         if (info.getFormat() == EBFile.FORMAT_EPWING6) {
-            list = new SelectionSort(leaf32 + leaf16 + 256 + 1);	// ArrayList<HuffmanNode>
+            list = new HuffmanTree(leaf32 + leaf16 + 256 + 1);	// ArrayList<HuffmanNode>
             len = b.length - (b.length % 6);
             try {
                 stream.seek(info.getEpwingFrequencyPosition());
@@ -103,7 +103,7 @@ public class EPWINGInputStream extends BookInputStream {
                 list.add(new HuffmanNode(value, freq, HuffmanNode.LEAF_32));
             }
         } else {
-            list = new SelectionSort(leaf16 + 256 + 1);	//ArrayList<HuffmanNode>
+            list = new HuffmanTree(leaf16 + 256 + 1);	//ArrayList<HuffmanNode>
         }
 
         // 16bitデータのハフマンノード作成
@@ -140,7 +140,7 @@ public class EPWINGInputStream extends BookInputStream {
         list.add(new HuffmanNode(256, 1, HuffmanNode.LEAF_EOF));
 
         // ハフマンツリーの作成
-        info.setEpwingRootNode(HuffmanNode.makeTree(list));
+        info.setEpwingRootNode(list.getTree());
 
         super.initFileInfo();
     }

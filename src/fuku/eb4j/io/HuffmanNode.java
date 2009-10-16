@@ -1,10 +1,6 @@
 package fuku.eb4j.io;
 
-import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.lang.Comparable;
-import net.cloudhunter.compat.java.util.ArrayList;
-import net.cloudhunter.compat.java.util.List;
-import net.rim.device.api.system.EventLogger;
 
 /**
  * ハフマンノードクラス。
@@ -173,78 +169,6 @@ public class HuffmanNode implements Comparable {
     	return "freqency=" + _frequency
     		+ "\tvalue=" + _value
     		+ "\tleafType=" + _leafType;
-    }
-
-    /**
-     * ハフマンツリーを作成します。
-     *
-     * @param list HuffmanNodeのリスト
-     * @return ルートノード
-     */
-    protected static HuffmanNode makeTree(SelectionSort list) {	//List<HuffmanNode>
-    	EBLogger.log("[S]makeTree", EventLogger.DEBUG_INFO);
-
-//        // ソート (選択ソート：大->小)
-//        int size = list.size();
-//        for (int i=0; i<size-1; i++) {
-//        	HuffmanNode current = (HuffmanNode)list.get(i);
-//            int n = i;
-//            for (int j=i+1; j<size; j++) {
-//            	HuffmanNode tmp = (HuffmanNode)list.get(j);
-//                if (current.compareTo(tmp) < 0) {
-//                	current = tmp;
-//                    n = j;
-//                }
-//            }
-//            if (i != n) {
-//                Collections.swap(list, i, n);
-//            }
-//        }
-    	
-//    	SelectionSort slist = new SelectionSort();
-//    	for(int i=0; i<list.size(); i++) {
-//    		slist.add(list.get(i));
-//    	}
-    	list.doSort();
-    	
-
-        // ハフマンツリーの作成
-    	List sortedList = new SortedList((ArrayList)list);
-        while (sortedList.size() > 1) {
-        	int lastIndex = sortedList.size() - 1;
-        	HuffmanNode node1 = (HuffmanNode)sortedList.get(lastIndex);
-        	sortedList.remove(lastIndex);
-        	
-        	lastIndex = sortedList.size() - 1;
-        	HuffmanNode node2 = (HuffmanNode)sortedList.get(lastIndex);
-        	sortedList.remove(lastIndex);
-        	
-        	sortedList.add(new HuffmanNode(node1, node2));
-        }
-
-        EBLogger.log("[E]makeTree", EventLogger.DEBUG_INFO);
-        return (HuffmanNode)sortedList.get(0);
-    }
-
-    /**
-     * 降順ソート（大->小）されたArrayList。
-     * 同じ値の場合、先に入った方がindexの若い方にある。
-     */
-    private static class SortedList extends ArrayList {
-    	public SortedList(ArrayList list) {
-    		super(list);
-    	}
-    	
-    	public boolean add(Object o) {
-    		for(int i=_vector.size()-1; i>=0; i--) {
-    			if( ((Comparable)_vector.elementAt(i)).compareTo(o) >= 0) {
-    				_vector.insertElementAt(o, i+1);
-    				return true;
-    			}
-    		}
-    		_vector.insertElementAt(o, 0);
-    		return true;
-    	}
     }
 }
 
