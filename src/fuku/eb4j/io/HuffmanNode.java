@@ -34,6 +34,17 @@ public class HuffmanNode implements Comparable {
     /** 右子ノード */
     private HuffmanNode _right = null;
 
+    /** Vectorに格納したときのインデックス（HuffmanTree作成用） */
+    private int index = -1;
+    
+    public void setIndex(int index) {
+    	this.index = index;
+    }
+    public int getIndex() {
+    	return index;
+    }
+    
+    
 
     /**
      * コンストラクタ。 (葉ノード用)
@@ -158,6 +169,12 @@ public class HuffmanNode implements Comparable {
         int ret = getFrequency() - ((HuffmanNode)node).getFrequency();
         return ret;
     }
+    
+    public String toString() {
+    	return "freqency=" + _frequency
+    		+ "\tvalue=" + _value
+    		+ "\tleafType=" + _leafType;
+    }
 
     /**
      * ハフマンツリーを作成します。
@@ -168,25 +185,32 @@ public class HuffmanNode implements Comparable {
     protected static HuffmanNode makeTree(List list) {	//List<HuffmanNode>
     	EBLogger.log("[S]makeTree", EventLogger.DEBUG_INFO);
 
-        // ソート (選択ソート：大->小)
-        int size = list.size();
-        for (int i=0; i<size-1; i++) {
-        	HuffmanNode current = (HuffmanNode)list.get(i);
-            int n = i;
-            for (int j=i+1; j<size; j++) {
-            	HuffmanNode tmp = (HuffmanNode)list.get(j);
-                if (current.compareTo(tmp) < 0) {
-                	current = tmp;
-                    n = j;
-                }
-            }
-            if (i != n) {
-                Collections.swap(list, i, n);
-            }
-        }
-        List sortedList = new SortedList((ArrayList)list);
+//        // ソート (選択ソート：大->小)
+//        int size = list.size();
+//        for (int i=0; i<size-1; i++) {
+//        	HuffmanNode current = (HuffmanNode)list.get(i);
+//            int n = i;
+//            for (int j=i+1; j<size; j++) {
+//            	HuffmanNode tmp = (HuffmanNode)list.get(j);
+//                if (current.compareTo(tmp) < 0) {
+//                	current = tmp;
+//                    n = j;
+//                }
+//            }
+//            if (i != n) {
+//                Collections.swap(list, i, n);
+//            }
+//        }
+    	
+    	SelectionSort slist = new SelectionSort();
+    	for(int i=0; i<list.size(); i++) {
+    		slist.add(list.get(i));
+    	}
+    	slist.doSort();
+    	
 
         // ハフマンツリーの作成
+    	List sortedList = new SortedList((ArrayList)slist);
         while (sortedList.size() > 1) {
         	int lastIndex = sortedList.size() - 1;
         	HuffmanNode node1 = (HuffmanNode)sortedList.get(lastIndex);
