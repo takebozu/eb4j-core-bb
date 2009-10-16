@@ -9,10 +9,6 @@ public class ArrayList implements List {
 		_vector = new Vector();
 	}
 
-	public ArrayList(ArrayList list) {
-		_vector = list._vector;
-	}
-
 	public ArrayList(int initialCapacity) {
 		this();
 	}
