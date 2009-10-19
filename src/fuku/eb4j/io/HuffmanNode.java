@@ -29,17 +29,11 @@ public class HuffmanNode implements Comparable {
     /** 右子ノード */
     private HuffmanNode _right = null;
 
-    /** Vectorに格納したときのインデックス（HuffmanTree作成用） */
+    /** Vector中のインデックス（HuffmanTree作成用） */
     private int index = -1;
     
-    public void setIndex(int index) {
-    	this.index = index;
-    }
-    public int getIndex() {
-    	return index;
-    }
-    
-    
+    /** Vectorに格納したときのインデックス（HuffmanTree作成用） */
+    private int orgIndex = -1;
 
     /**
      * コンストラクタ。 (葉ノード用)
@@ -66,7 +60,9 @@ public class HuffmanNode implements Comparable {
         _frequency = _left.getFrequency() + _right.getFrequency();
     }
 
-
+    //--------------------------------------------------------------------------------
+    // setters/getters
+    //--------------------------------------------------------------------------------
     /**
      * 葉ノードの種類を返します。
      *
@@ -124,6 +120,24 @@ public class HuffmanNode implements Comparable {
         return false;
     }
 
+    public void setIndex(int index) {
+    	this.index = index;
+    }
+
+    public int getIndex() {
+    	return index;
+    }
+    
+    public void setOrgIndex(int index) {
+    	this.orgIndex = index;
+    }
+    
+    public int getOrgIndex() {
+    	return orgIndex;
+    }
+
+    //--------------------------------------------------------------------------------
+    
     /**
      * オブジェクトのハッシュコード値を返します。
      *
@@ -165,6 +179,9 @@ public class HuffmanNode implements Comparable {
         return ret;
     }
     
+    /**
+     * 文字列表現を返します。
+     */
     public String toString() {
     	return "freqency=" + _frequency
     		+ "\tvalue=" + _value
