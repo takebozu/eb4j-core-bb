@@ -1,0 +1,16 @@
+Original development environment ...
+ - Eclipse 3.4.1 Build id: M20080911-1700
+ - BBlackBerry_JDE_PluginFull_1.0.0.67.exe
+ - eJDE-4_6_0_19_Component.zip
+
+Configure this project as library project ... 
+ - Window > Preferences
+ 	- BlackbBerry Project Properties > [Application] Tab 
+		set "Project type" to "Library"
+	- Java > Compiler
+		set "Compiler compliance level" to "1.4"
+		
+Setup in referrer project ...
+ - Window > Preferences
+	- Java Build Path -> add this project
+	- Project References -> add this project
