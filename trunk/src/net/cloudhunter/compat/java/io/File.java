@@ -137,10 +137,9 @@ public class File {
 		}
 		for (int i = 0; i < utf.length; ++i) {
 			char b = (char) utf[i];
-//			if (b == ' ') {
-//				buf.append('+');
-//			} else
-			if (isRFC3986Unreserved(b)) {
+			if (b == ' ') {
+				buf.append('+');
+			} else if (isRFC3986Unreserved(b)) {
 				buf.append(b);
 			} else {
 				buf.append('%');
