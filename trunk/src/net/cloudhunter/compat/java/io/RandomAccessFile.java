@@ -17,7 +17,7 @@ public class RandomAccessFile {
 	public RandomAccessFile(File file, String mode) throws FileNotFoundException {
 		try {
 			_path = file.getPath();
-			System.out.println("Opening RandomAccessFile:" + _path);
+			//System.out.println("Opening RandomAccessFile:" + _path);
 			_conn = (FileConnection)Connector.open(_path, Connector.READ);
 			if(!_conn.exists()) {
 				throw new FileNotFoundException(_path);
@@ -54,7 +54,7 @@ public class RandomAccessFile {
      
      
 	public void close() throws IOException {
-		System.out.println("Closing RandomAccessFile:" + _path);
+		//System.out.println("Closing RandomAccessFile:" + _path);
 		currentPos = 0;
 		if(_stream != null) {
 			_stream.close();
