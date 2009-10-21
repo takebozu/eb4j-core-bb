@@ -834,7 +834,7 @@ public class BookReader {
                         if (!skip) {
                             _hook.append(ByteUtil.jisx0208ToString(b, off, 2));
                         }
-                    } else if (high > 0x20 && high > 0x7f
+                    } else if (high > 0x20 && high < 0x7f
                                && low > 0xa0 && low < 0xff) {
                         // GB 2312
                         if (!skip) {

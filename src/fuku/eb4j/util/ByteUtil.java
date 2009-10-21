@@ -390,9 +390,9 @@ public class ByteUtil {
         }
         String str = null;
         try {
-            str = new String(buf, "EUC-CN");
+            str = new String(buf, "GB2312");	//EUC-CN
         } catch (UnsupportedEncodingException e) {
-        	EBLogger.log("Unsupported encoding:EUC-CN");
+        	EBLogger.log("Unsupported encoding:GB2312");
             str = new String(buf);
         }
         return str.trim();
