@@ -1,8 +1,10 @@
 package fuku.eb4j;
 
+import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.io.File;
 import net.cloudhunter.compat.java.util.ArrayList;
 import net.cloudhunter.compat.org.apache.commons.lang.StringUtils;
+import net.rim.device.api.system.EventLogger;
 
 
 import fuku.eb4j.io.EBFile;
@@ -202,12 +204,22 @@ public class SubBook {
             _fonts[i] = new ExtFont(this, i);
             if (gaijiDir != null) {
                 if (narrow[i] != null) {
-                    file = new EBFile(gaijiDir, narrow[i], EBFile.FORMAT_PLAIN);
-                    _fonts[i].setNarrowFont(file, 1);
+                	try {
+                		file = new EBFile(gaijiDir, narrow[i], EBFile.FORMAT_PLAIN);
+                		_fonts[i].setNarrowFont(file, 1);
+                	} catch(EBException e) {
+                		//ファイルが見つからない場合はスルーする
+                		EBLogger.log("Font file not found\nFile:" + narrow[i] + ", Dir:" + gaijiDir.getPath(), EventLogger.WARNING);
+                	}
                 }
                 if (wide[i] != null) {
-                    file = new EBFile(gaijiDir, wide[i], EBFile.FORMAT_PLAIN);
-                    _fonts[i].setWideFont(file, 1);
+                	try {
+                		file = new EBFile(gaijiDir, wide[i], EBFile.FORMAT_PLAIN);
+                		_fonts[i].setWideFont(file, 1);
+                	} catch(EBException e) {
+                		//ファイルが見つからない場合はスルーする
+                		EBLogger.log("Font file not found\nFile:" + wide[i] + ", Dir:" + gaijiDir.getPath(), EventLogger.WARNING);
+                	}
                 }
             }
         }
