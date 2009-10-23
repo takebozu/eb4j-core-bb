@@ -420,10 +420,9 @@ public class ByteUtil {
     	StringBuffer buf = new StringBuffer();
         for (int i=0; i<len/2; i++) {
         	if (b[offset+i*2] == '\0') {
-            	//stop convertion
+            	//ignore, do nothing
             	//ch[0] = '\0';
             	//ch[1] = '\0';
-        		break;
             } else if(b[offset+i*2] == (byte)0x21 && b[offset+i*2 + 1] == (byte)0x41) {
             	buf.append((char)0xFF5E);	//WAVE DASH -> FULL WIDE TILDE
             } else if(b[offset+i*2] == (byte)0x2D 
