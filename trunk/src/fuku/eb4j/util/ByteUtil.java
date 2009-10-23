@@ -417,23 +417,30 @@ public class ByteUtil {
      * @return 変換した文字列
      */
     public static String jisx0208ToString(byte[] b, int offset, int len) {
-        byte[] buf = new byte[len];
-        // JISX0208 -> EUC-JP
-        for (int i=0; i<len; i++) {
-            if (b[offset+i] != '\0') {
-                buf[i] = (byte)(b[offset+i] | 0x80);
+    	StringBuffer buf = new StringBuffer();
+        for (int i=0; i<len/2; i++) {
+        	if (b[offset+i*2] == '\0') {
+            	//stop convertion
+            	//ch[0] = '\0';
+            	//ch[1] = '\0';
+        		break;
+            } else if(b[offset+i*2] == (byte)0x21 && b[offset+i*2 + 1] == (byte)0x41) {
+            	buf.append((char)0xFF5E);	//WAVE DASH -> FULL WIDE TILDE
+            } else if(b[offset+i*2] == (byte)0x2D 
+            		&& b[offset+i*2 + 1] >= (byte)0x21 && b[offset+i*2 + 1] < (byte)0x35) {
+            	buf.append((char)(0x2460 + b[offset+i*2 + 1] - 0x21));	//①～⑳
             } else {
-                buf[i] = '\0';
+        		byte[] ch = new byte[2];
+          		ch[0] = (byte)(b[offset+i*2] | 0x80);
+           		ch[1] = (byte)(b[offset+i*2+1] | 0x80);
+               	try {
+            		buf.append(new String(ch, "EUC-JP"));
+            	} catch(UnsupportedEncodingException e) {
+            		buf.append(new String(ch));
+            	}
             }
         }
-        String str = null;
-        try {
-            str = new String(buf, "EUC-JP");
-        } catch (UnsupportedEncodingException e) {
-        	EBLogger.log("Unsupported encoding:EUC-JP");
-            str = new String(buf);
-        }
-        return str.trim();
+        return buf.toString().trim();
     }
 
     /**
