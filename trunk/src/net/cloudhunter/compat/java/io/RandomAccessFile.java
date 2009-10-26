@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import net.cloudhunter.bb.URLUTF8Encoder;
+
 public class RandomAccessFile {
 	private FileConnection _conn = null;
 	private String _path = null;
@@ -18,7 +20,7 @@ public class RandomAccessFile {
 		try {
 			_path = file.getPath();
 			//System.out.println("Opening RandomAccessFile:" + _path);
-			_conn = (FileConnection)Connector.open(_path, Connector.READ);
+			_conn = (FileConnection)Connector.open(URLUTF8Encoder.encode(_path), Connector.READ);
 			if(!_conn.exists()) {
 				throw new FileNotFoundException(_path);
 			}
