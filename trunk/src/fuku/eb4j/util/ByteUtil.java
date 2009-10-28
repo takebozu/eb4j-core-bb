@@ -233,10 +233,10 @@ public class ByteUtil {
      * @return 変換した数値
      */
     public static long getLong4(byte[] b, int offset) {
-        long ret = (b[offset] & 0xff) << 24;
-        ret += ((b[offset+1] & 0xff) << 16);
-        ret += ((b[offset+2] & 0xff) << 8);
-        ret += (b[offset+3] & 0xff);
+        long ret = (b[offset] & 0xffL) << 24;
+        ret += ((b[offset+1] & 0xffL) << 16);
+        ret += ((b[offset+2] & 0xffL) << 8);
+        ret += (b[offset+3] & 0xffL);
         return ret;
     }
 
@@ -248,10 +248,10 @@ public class ByteUtil {
      * @return 変換した数値
      */
     public static long getLongLE4(byte[] b, int offset) {
-        long ret = (b[offset+3] & 0xff) << 24;
-        ret += ((b[offset+2] & 0xff) << 16);
-        ret += ((b[offset+1] & 0xff) << 8);
-        ret += (b[offset] & 0xff);
+        long ret = (b[offset+3] & 0xffL) << 24;
+        ret += ((b[offset+2] & 0xffL) << 16);
+        ret += ((b[offset+1] & 0xffL) << 8);
+        ret += (b[offset] & 0xffL);
         return ret;
     }
 
