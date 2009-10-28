@@ -2,6 +2,8 @@ package fuku.eb4j.io;
 
 import java.io.IOException;
 
+import net.cloudhunter.bb.EBLogger;
+import net.rim.device.api.system.EventLogger;
 import net.rim.device.api.util.Arrays;
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
@@ -61,6 +63,7 @@ public class EPWINGInputStream extends BookInputStream {
         try {
             stream.seek(pos);
         } catch (IOException e) {
+        	EBLogger.log("Failed to seek file", EventLogger.ERROR);
             throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
         }
         readRawFully(b, 0, 36);
@@ -90,6 +93,7 @@ public class EPWINGInputStream extends BookInputStream {
             try {
                 stream.seek(info.getEpwingFrequencyPosition());
             } catch (IOException e) {
+            	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                 throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
             }
             readRawFully(b, 0, len);
@@ -111,6 +115,7 @@ public class EPWINGInputStream extends BookInputStream {
         try {
             stream.seek(info.getEpwingFrequencyPosition() + leaf32 * 6L);
         } catch (IOException e) {
+        	EBLogger.log("Failed to seek file", EventLogger.ERROR);
             throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
         }
         readRawFully(b, 0, len);
@@ -128,6 +133,7 @@ public class EPWINGInputStream extends BookInputStream {
         try {
             stream.seek(info.getEpwingFrequencyPosition() + leaf32 * 6L + leaf16 * 4L);
         } catch (IOException e) {
+        	EBLogger.log("Failed to seek file", EventLogger.ERROR);
             throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
         }
         readRawFully(b, 0, b.length);
@@ -177,6 +183,7 @@ public class EPWINGInputStream extends BookInputStream {
                 try {
                     stream.seek(pos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 byte[] buf = new byte[36];
@@ -191,6 +198,7 @@ public class EPWINGInputStream extends BookInputStream {
                 try {
                     stream.seek(pagePos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 _decode();

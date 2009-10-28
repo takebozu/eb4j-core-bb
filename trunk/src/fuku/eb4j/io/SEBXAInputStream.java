@@ -2,6 +2,9 @@ package fuku.eb4j.io;
 
 import java.io.IOException;
 
+import net.cloudhunter.bb.EBLogger;
+import net.rim.device.api.system.EventLogger;
+
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
 
@@ -79,6 +82,7 @@ public class SEBXAInputStream extends BookInputStream {
                 try {
                     stream.seek(filePos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 n = readRaw(b, off+rlen, n);
@@ -89,6 +93,7 @@ public class SEBXAInputStream extends BookInputStream {
                 try {
                     stream.seek(filePos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 readRawFully(b, off+rlen, len-rlen);
@@ -113,6 +118,7 @@ public class SEBXAInputStream extends BookInputStream {
                         try {
                             stream.seek(pos);
                         } catch (IOException e) {
+                        	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                             throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                         }
                         byte[] tmp = new byte[4];
@@ -123,6 +129,7 @@ public class SEBXAInputStream extends BookInputStream {
                     try {
                         stream.seek(slicePos);
                     } catch (IOException e) {
+                    	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                         throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                     }
                     _decode();
@@ -164,6 +171,7 @@ public class SEBXAInputStream extends BookInputStream {
                 // バッファにデータを読み込む
                 inRest = readRaw(b, 0, b.length);
                 if (inRest <= 0) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath());
                 }
                 inOff = 0;
@@ -184,6 +192,7 @@ public class SEBXAInputStream extends BookInputStream {
             for (int i=0; i<len; i++) {
                 if (flags[i]) {
                     if (inRest <= 1) {
+                    	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                         throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath());
                     }
                     int c0 = b[inOff] & 0xff;

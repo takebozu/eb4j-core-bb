@@ -2,6 +2,8 @@ package fuku.eb4j.io;
 
 import java.io.IOException;
 
+import net.cloudhunter.bb.EBLogger;
+import net.rim.device.api.system.EventLogger;
 import fuku.eb4j.EBException;
 
 /**
@@ -76,6 +78,7 @@ public class PlainInputStream extends BookInputStream {
                 try {
                     stream.seek(cachePos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 int readLen = PAGE_SIZE;

@@ -2,8 +2,10 @@ package fuku.eb4j.io;
 
 import java.io.IOException;
 
+import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.compat.java.util.zip.DataFormatException;
 import net.cloudhunter.compat.java.util.zip.Inflater;
+import net.rim.device.api.system.EventLogger;
 
 
 import fuku.eb4j.EBException;
@@ -128,6 +130,7 @@ public class EBZipInputStream
                 try {
                     stream.seek(pos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 byte[] buf = new byte[info.getZipIndexSize()*2];
@@ -163,6 +166,7 @@ public class EBZipInputStream
                 try {
                     stream.seek(slicePos);
                 } catch (IOException e) {
+                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 _decode(sliceSize);
