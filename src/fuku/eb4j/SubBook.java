@@ -1,16 +1,22 @@
 package fuku.eb4j;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.Hashtable;
+
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
+
 import net.cloudhunter.bb.EBLogger;
+import net.cloudhunter.bb.URLUTF8Encoder;
 import net.cloudhunter.compat.java.io.File;
 import net.cloudhunter.compat.java.util.ArrayList;
 import net.cloudhunter.compat.org.apache.commons.lang.StringUtils;
 import net.rim.device.api.system.EventLogger;
-
-
-import fuku.eb4j.io.EBFile;
+import fuku.eb4j.hook.Hook;
 import fuku.eb4j.io.BookInputStream;
 import fuku.eb4j.io.BookReader;
-import fuku.eb4j.hook.Hook;
+import fuku.eb4j.io.EBFile;
 import fuku.eb4j.util.ByteUtil;
 
 /**
@@ -47,6 +53,8 @@ public class SubBook {
     private EBFile _graphic = null;
     /** 音声データファイル */
     private EBFile _sound = null;
+    /** UNICODE文字コードマッピング */
+    private Hashtable _unicodeMap = null;
 
     /** インデックスページ */
     private int _indexPage = 0;
@@ -150,6 +158,10 @@ public class SubBook {
         _text = new EBFile(dir, fname[0], format[0]);
         // 画像データファイル
         _graphic = _text;
+        
+        //UNICODE文字コードマッピング
+        _unicodeMap = getUnicodeMap();
+        System.out.println(path + ":" + _unicodeMap);
     }
 
     /**
@@ -229,7 +241,113 @@ public class SubBook {
             _movieDir = EBFile.searchDirectory(dir, "movie");
         } catch (EBException e) {
         }
+        
+        //UNICODE文字コードマッピング
+        _unicodeMap = getUnicodeMap();
+        System.out.println(path + ":" + _unicodeMap);
     }
+    
+    /**
+     * unicode.mapファイルからデータファイル内文字コード->UNICODEのマッピングを作成します。
+     * 
+     * @return マッピングテーブル
+     */
+    private Hashtable getUnicodeMap() {
+		Hashtable result = new Hashtable();
+		
+		FileConnection conn = null;
+		DataInputStream stream = null;
+		try {
+			String mapFile = _book.getPath() + _name + "/unicode.map"; 
+			conn = (FileConnection)Connector.open(URLUTF8Encoder.encode(mapFile), Connector.READ);
+			stream = conn.openDataInputStream();
+		} catch(IOException e) {
+			return result;
+		} finally {
+			if(stream != null) {
+				try {
+					stream.close();
+				} catch(IOException e) {
+					//do nothing
+				}
+			}
+			if(conn != null) {
+				try {
+					conn.close();
+				} catch(IOException e) {
+					//do nothing
+				}
+			}
+		}
+		
+		try {
+			byte[] buf = new byte[1024];
+			int size = stream.read(buf, 0, buf.length);
+			
+			String key = null;
+			String value = null;
+			int prevPos = -1;
+			boolean isIgnoring = false;
+			while(size > 0) {
+				
+				for(int i=0; i < size; i++) {
+					if(buf[i]== '#') {
+						isIgnoring = true;
+					} else if(!isIgnoring && key == null && buf[i] == '\t') {
+						key = new String(buf, prevPos + 1, i - prevPos - 1);
+						prevPos = i;
+					} else if(!isIgnoring && key != null && value == null && (buf[i] == '\t' || buf[i] == '\r' || buf[i] == '\n')) {
+						value = new String(buf, prevPos + 1, i - prevPos - 1);
+					} else if(buf[i] == '\r' || buf[i] == '\n') {
+						if(key != null && value != null && value.charAt(0) == 'u') {
+							Integer saveKey = Integer.valueOf(key.substring(1), 16);
+							String saveValue = null;
+							int comma = value.indexOf(',');
+							if(comma < 0) {
+								saveValue = String.valueOf((char)Integer.valueOf(value.substring(1), 16).intValue());
+							} else {
+								String p1 = value.substring(0, comma);
+								String p2 = value.substring(comma + 1);
+								 saveValue = String.valueOf((char)Integer.valueOf(p1.substring(1), 16).intValue())
+									+ String.valueOf((char)Integer.valueOf(p2.substring(1), 16).intValue());
+							}
+							result.put(saveKey, saveValue);
+						}
+						key = null;
+						value = null;
+						prevPos = i;
+						isIgnoring = false;
+					}
+				}
+				int remainLen = size - prevPos - 1;
+				System.arraycopy(buf, prevPos + 1, buf, 0, remainLen);
+				size = stream.read(buf, remainLen, buf.length - remainLen);
+				size += remainLen;
+				prevPos = -1; 
+			}
+		} catch(IOException e) {
+			//do nothing
+		} finally {
+			if(stream != null) {
+				try {
+					stream.close();
+				} catch(IOException e) {
+					//do nothing
+				}
+			}
+			if(conn != null) {
+				try {
+					conn.close();
+				} catch(IOException e) {
+					//do nothing
+				}
+			}
+		}
+		
+		return result;
+    }
+    
+    
 
     /**
      * この副本の情報を読み込みます。
