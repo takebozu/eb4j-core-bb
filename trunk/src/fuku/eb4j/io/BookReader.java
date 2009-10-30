@@ -1,5 +1,7 @@
 package fuku.eb4j.io;
 
+import java.util.Hashtable;
+
 import fuku.eb4j.Book;
 import fuku.eb4j.EBException;
 import fuku.eb4j.SubBook;
@@ -146,6 +148,9 @@ public class BookReader {
      * @exception EBException 入出力エラーが発生した場合
      */
     private long _read(long pos, int type, boolean skip) throws EBException {
+    	final Hashtable unicodeMap = _sub.getUnicodeMap();
+    	boolean isBetweenSpecialGaijiTag = false;  	//小学館日中・中日辞典の外字対応（0x1F1C～0x1F1Dタグの間に外字がある）
+    	
         _bis.seek(pos);
 
         // データの読み込み
@@ -295,7 +300,15 @@ public class BookReader {
                     case 0x1a:
                     case 0x1b:
                     case 0x1c:
+                    	//小学館日中・中日辞典の外字の開始
+                    	isBetweenSpecialGaijiTag = true;
+                    	off += 2;
+                    	break;
                     case 0x1d:
+                    	//小学館日中・中日辞典の外字の終了
+                    	isBetweenSpecialGaijiTag = false;
+                    	off += 2;
+                    	break;
                     case 0x1e:
                     case 0x1f: {
                         if (off + 4 > len) {
@@ -832,16 +845,42 @@ public class BookReader {
                     if (high > 0x20 && high < 0x7f && low > 0x20 && low < 0x7f) {
                         // JIS X 0208
                         if (!skip) {
-                            _hook.append(ByteUtil.jisx0208ToString(b, off, 2));
+                        	String str = null; 
+                        	if(unicodeMap != null) {
+                        		Integer key = null;
+                        		if(isBetweenSpecialGaijiTag) {
+                        			//特殊タグの間のコードはそのまま使う
+                        			key = new Integer((high << 8) + low);
+                        		} else {
+                        			key = new Integer(((high | 0x80) << 8) + (low | 0x80));
+                        		}
+                        		str = (String)unicodeMap.get(key);
+                        	}
+                        	if(str == null) {
+                        		str = ByteUtil.jisx0208ToString(b, off, 2);
+                        	}
+                        	_hook.append(str);
                         }
-                    } else if (high > 0x20 && high < 0x7f
-                               && low > 0xa0 && low < 0xff) {
+                    } else if (high > 0x20 && high < 0x7f && low > 0xa0 && low < 0xff) {
                         // GB 2312
                         if (!skip) {
-                            _hook.append(ByteUtil.gb2312ToString(b, off, 2));
+                        	String str = null; 
+                        	if(unicodeMap != null) {
+                        		Integer key = null;
+                        		if(isBetweenSpecialGaijiTag) {
+                        			//特殊タグの間のコードはそのまま使う
+                        			key = new Integer((high << 8) + low);
+                        		} else {
+                        			key = new Integer(((high | 0x80) << 8) + low);
+                        		}
+                        		str = (String)unicodeMap.get(key);
+                        	}
+                        	if(str == null) {
+                        		str = ByteUtil.gb2312ToString(b, off, 2);
+                        	}
+                        	_hook.append(str);
                         }
-                    } else if (high > 0xa0 && high < 0xff
-                               && low > 0x20 && low < 0x7f) {
+                    } else if (high > 0xa0 && high < 0xff && low > 0x20 && low < 0x7f) {
                         // 外字
                         int code = ByteUtil.getInt2(b, off);
                         if (!skip) {

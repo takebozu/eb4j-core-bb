@@ -160,7 +160,7 @@ public class SubBook {
         _graphic = _text;
         
         //UNICODE文字コードマッピング
-        _unicodeMap = getUnicodeMap();
+        createUnicodeMap();
         System.out.println(path + ":" + _unicodeMap);
     }
 
@@ -243,41 +243,43 @@ public class SubBook {
         }
         
         //UNICODE文字コードマッピング
-        _unicodeMap = getUnicodeMap();
+        createUnicodeMap();
         System.out.println(path + ":" + _unicodeMap);
     }
+    
+    
     
     /**
      * unicode.mapファイルからデータファイル内文字コード->UNICODEのマッピングを作成します。
      * 
      * @return マッピングテーブル
      */
-    private Hashtable getUnicodeMap() {
+    private void createUnicodeMap() {
 		Hashtable result = new Hashtable();
 		
 		FileConnection conn = null;
 		DataInputStream stream = null;
 		try {
-			String mapFile = _book.getPath() + _name + "/unicode.map"; 
+			String mapFile = _book.getPath() + _name + (_name + ".map"); 
 			conn = (FileConnection)Connector.open(URLUTF8Encoder.encode(mapFile), Connector.READ);
 			stream = conn.openDataInputStream();
 		} catch(IOException e) {
-			return result;
-		} finally {
+			//file not found
 			if(stream != null) {
 				try {
 					stream.close();
-				} catch(IOException e) {
+				} catch(IOException e2) {
 					//do nothing
 				}
 			}
 			if(conn != null) {
 				try {
 					conn.close();
-				} catch(IOException e) {
+				} catch(IOException e2) {
 					//do nothing
 				}
 			}
+			return;
 		}
 		
 		try {
@@ -327,6 +329,7 @@ public class SubBook {
 			}
 		} catch(IOException e) {
 			//do nothing
+			e.printStackTrace();
 		} finally {
 			if(stream != null) {
 				try {
@@ -344,9 +347,13 @@ public class SubBook {
 			}
 		}
 		
-		return result;
+		_unicodeMap = result;
+		EBLogger.log((_name + ".map").substring(1) + " initialized:" + result.size() + " mappings");
     }
     
+    public Hashtable getUnicodeMap() {
+    	return _unicodeMap;
+    }
     
 
     /**
