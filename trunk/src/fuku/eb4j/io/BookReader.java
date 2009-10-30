@@ -297,8 +297,6 @@ public class BookReader {
                         _skipCode = 0x15;
                         break;
                     }
-                    case 0x1a:
-                    case 0x1b:
                     case 0x1c:
                     	//小学館日中・中日辞典の外字の開始
                     	isBetweenSpecialGaijiTag = true;
@@ -309,6 +307,8 @@ public class BookReader {
                     	isBetweenSpecialGaijiTag = false;
                     	off += 2;
                     	break;
+                    case 0x1a:
+                    case 0x1b:
                     case 0x1e:
                     case 0x1f: {
                         if (off + 4 > len) {
@@ -849,7 +849,7 @@ public class BookReader {
                         	if(unicodeMap != null) {
                         		Integer key = null;
                         		if(isBetweenSpecialGaijiTag) {
-                        			//特殊タグの間のコードはそのまま使う
+                        			//特殊タグの間のコードはそのまま使う（ここに来るのが判明しているのは「小学館日中・中日辞典」のみ）
                         			key = new Integer((high << 8) + low);
                         		} else {
                         			key = new Integer(((high | 0x80) << 8) + (low | 0x80));
@@ -866,13 +866,7 @@ public class BookReader {
                         if (!skip) {
                         	String str = null; 
                         	if(unicodeMap != null) {
-                        		Integer key = null;
-                        		if(isBetweenSpecialGaijiTag) {
-                        			//特殊タグの間のコードはそのまま使う
-                        			key = new Integer((high << 8) + low);
-                        		} else {
-                        			key = new Integer(((high | 0x80) << 8) + low);
-                        		}
+                        		Integer key = new Integer(((high | 0x80) << 8) + low);
                         		str = (String)unicodeMap.get(key);
                         	}
                         	if(str == null) {
