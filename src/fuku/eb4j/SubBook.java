@@ -161,7 +161,7 @@ public class SubBook {
         
         //UNICODE文字コードマッピング
         createUnicodeMap();
-        System.out.println(path + ":" + _unicodeMap);
+        //System.out.println(path + ":" + _unicodeMap);
     }
 
     /**
