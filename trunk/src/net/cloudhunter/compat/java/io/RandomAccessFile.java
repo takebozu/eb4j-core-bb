@@ -43,24 +43,24 @@ public class RandomAccessFile {
      
      public void seek(long pos) throws IOException {
     	 if(currentPos < pos) {
-    		 EBLogger.log("[S]RAF skip1:pos=" + pos + ",currentPos=" + currentPos);
+    		 EBLogger.log("[S]RAF skip only:pos=" + pos + ",currentPos=" + currentPos, EventLogger.DEBUG_INFO);
     		 //TODO 差が大きいとパフォーマンスが著しく悪い
     		 _stream.skip(pos - currentPos);
-    		 EBLogger.log("[E]RAF skip1");
+    		 EBLogger.log("[E]RAF skip only", EventLogger.DEBUG_INFO);
     	 } else if (currentPos > pos) {
     		 if(_stream.markSupported() && pos < Integer.MAX_VALUE) {
-    			 EBLogger.log("[S]RAF reset:pos=" + pos + ",currentPos=" + currentPos);
+    			 EBLogger.log("[S]RAF reset:pos=" + pos + ",currentPos=" + currentPos, EventLogger.DEBUG_INFO);
     			 _stream.reset();
-    			 EBLogger.log("[E]RAF reset");
+    			 EBLogger.log("[E]RAF reset", EventLogger.DEBUG_INFO);
     		 } else {
-    			 EBLogger.log("[S]RAF close&open:pos=" + pos + ",currentPos=" + currentPos);
+    			 EBLogger.log("[S]RAF close&open:pos=" + pos + ",currentPos=" + currentPos, EventLogger.DEBUG_INFO);
     			 _stream.close();
     			 _stream = _conn.openDataInputStream();
-    			 EBLogger.log("[E]RAF close&open");
+    			 EBLogger.log("[E]RAF close&open", EventLogger.DEBUG_INFO);
     		 }
-    		 EBLogger.log("[S]RAF skip2");
+    		 EBLogger.log("[S]RAF skip for prev opr.", EventLogger.DEBUG_INFO);
 			 _stream.skip(pos);
-			 EBLogger.log("[E]RAF skip2");
+			 EBLogger.log("[E]RAF skip for prev opr.", EventLogger.DEBUG_INFO);
     	 }
 		 currentPos = pos;
      }

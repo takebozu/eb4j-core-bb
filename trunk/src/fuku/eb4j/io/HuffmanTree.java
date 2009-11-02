@@ -178,17 +178,13 @@ public class HuffmanTree {
 	 * @return
 	 */
 	public HuffmanNode getTree() {
-		EBLogger.log("[S]getTree", EventLogger.DEBUG_INFO);
-
 		String cacheKey = getCacheKey();
 		if(huffmanCache == null || huffmanCache.get(cacheKey) == null) {
-			EBLogger.log("[-]getTree - not cached", EventLogger.DEBUG_INFO);
 			doSelectionSort();
 			if(huffmanCache != null) {
 				huffmanCache.put(cacheKey, getCacheString());
 			}
 		} else {
-			EBLogger.log("[-]getTree - using cached", EventLogger.DEBUG_INFO);
 			sortByCacheString((String)huffmanCache.get(cacheKey));
 		}
 		
@@ -205,7 +201,6 @@ public class HuffmanTree {
         	sortedList.add(new HuffmanNode(node1, node2));
         }
 
-		EBLogger.log("[E]getTree", EventLogger.DEBUG_INFO);
 		return (HuffmanNode)sortedList.get(0);
 	}
 	
