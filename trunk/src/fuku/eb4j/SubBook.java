@@ -92,6 +92,12 @@ public class SubBook {
     /** 著作権用インデックススタイル */
     private IndexStyle _copyrightStyle = null;
 
+    /** 
+     * 同じメソッドを繰り返し呼び出す場合、毎回BookReaderをnewしていると、seekのときに時間がかかりすぎる。
+     * それを改善するために、繰り返し呼び出しの前後にopenBookReader/closeBookReaderを呼び出すようにすることで、
+     * 1回だけopen/closeするようにして、パフォーマンスを改善する。
+     */
+    private BookReader bookReader = null;
 
     /**
      * コンストラクタ。
@@ -139,6 +145,26 @@ public class SubBook {
                     break;
                 }
             }
+        }
+    }
+
+    /**
+     * これに続く繰り返し処理のために、BookReaderを開く。
+     * @param hook
+     * @throws EBException
+     */
+    public void openBookReader(Hook hook) throws EBException {
+    	bookReader = new BookReader(this, hook);
+    }
+
+    /**
+     * 繰り返し処理が終了したときに、BookReaderを閉じる。
+     * @param hook
+     * @throws EBException
+     */
+    public void closeBookReader() {
+        if (bookReader != null) {
+        	bookReader.close();
         }
     }
 
@@ -911,10 +937,14 @@ public class SubBook {
         BookReader reader = null;
         Object t = null;
         try {
-            reader = new BookReader(this, hook);
+        	if(bookReader != null) {
+        		reader = bookReader;
+        	} else {
+        		reader = new BookReader(this, hook);
+        	}
             t = reader.readHeading(pos);
         } finally {
-            if (reader != null) {
+            if (reader != null && bookReader == null) {
                 reader.close();
             }
         }
