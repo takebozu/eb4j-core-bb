@@ -137,6 +137,17 @@ public class MultiWordSearcher implements Searcher {
 
         return result[0];
     }
+    
+    /**
+     * 利用したInputStreamをすべて閉じる。
+	　*/
+    public void close() {
+    	//TODO 検証されていないコードなので、このクラスを利用する場合には正しく動作するか検証が必要。
+    	//特にファイルハンドルの上限まで開いてしまう可能性があるため、Exceptionがthrowされるのではないかと懸念される。
+    	for(int i=0; i<_searcher.length; i++) {
+    		_searcher[i].close();
+    	}
+    }
 }
 
 // end of MultiWordSearcher.java

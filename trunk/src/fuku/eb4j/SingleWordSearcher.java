@@ -5,6 +5,8 @@ package fuku.eb4j;
 //import org.apache.commons.logging.LogFactory;
 //import org.apache.commons.logging.Log;
 
+import net.cloudhunter.bb.EBLogger;
+import net.rim.device.api.system.EventLogger;
 import fuku.eb4j.io.EBFile;
 import fuku.eb4j.io.BookInputStream;
 import fuku.eb4j.util.ByteUtil;
@@ -156,6 +158,7 @@ public class SingleWordSearcher implements Searcher {
      *         キーがパターンより小さい場合:-1以下
      */
     private int _comparePre(byte[] key, byte[] pattern) {
+    	EBLogger.log("[S]_comparePre", EventLogger.DEBUG_INFO);
         int comp = 0;
         switch (_type) {
             case EXACTWORD:
@@ -190,6 +193,7 @@ public class SingleWordSearcher implements Searcher {
 //                       + new String(pattern, "x-JIS0208") + "'");
 //        } catch (UnsupportedEncodingException e) {
 //        }
+        EBLogger.log("[E]_comparePre", EventLogger.DEBUG_INFO);
         return comp;
     }
 
@@ -322,6 +326,8 @@ public class SingleWordSearcher implements Searcher {
         return comp;
     }
 
+    private BookInputStream bis = null;
+    
     /**
      * 検索を行います。
      *
@@ -333,14 +339,20 @@ public class SingleWordSearcher implements Searcher {
         _page = _style.getStartPage();
 
         // pre-search
-        BookInputStream bis = _file.getInputStream();
-        try {
+       // BookInputStream bis = _file.getInputStream();
+        if(bis == null) {
+        	bis = _file.getInputStream();
+        }
+//        try {
             long nextPage = _page;
             int depth;
+            EBLogger.log("[S]Index loop", EventLogger.DEBUG_INFO);
             for (depth=0; depth<MAX_INDEX_DEPTH; depth++) {
                 // データをキャッシュへ読み込む
                 bis.seek(_page, 0);
+                EBLogger.log("[S]search.readFully");
                 bis.readFully(_cache, 0, _cache.length);
+                EBLogger.log("[E]search.readFully");
                 _cachePage = _page;
 
                 _pageID = _cache[0] & 0xff;
@@ -362,6 +374,7 @@ public class SingleWordSearcher implements Searcher {
 
                 // 次のレベルのインデックスを取得する
                 byte[] b = new byte[_entryLength];
+                EBLogger.log("[S]Entry loop", EventLogger.DEBUG_INFO);
                 for (_entryIndex=0; _entryIndex<_entryCount; _entryIndex++) {
                     if (_off + _entryLength + 4 > BookInputStream.PAGE_SIZE) {
                         throw new EBException(EBException.UNEXP_FILE, _file.getPath());
@@ -385,9 +398,9 @@ public class SingleWordSearcher implements Searcher {
             if (depth == MAX_INDEX_DEPTH) {
                 throw new EBException(EBException.UNEXP_FILE, _file.getPath());
             }
-        } finally {
-            bis.close();
-        }
+//        } finally {
+//            bis.close();
+//        }
         _entryIndex = 0;
         _comparison = 1;
         _inGroupEntry = false;
@@ -408,16 +421,24 @@ public class SingleWordSearcher implements Searcher {
             return null;
         }
 
+        //BookInputStream bis = null;//_file.getInputStream();
+//        try {
+        	
+        
         while (true) {
             // キャッシュとデータのページが異なれば読み込む
             if (_cachePage != _page) {
-                BookInputStream bis = _file.getInputStream();
-                try {
+            	if(bis==null) {
+            		bis = _file.getInputStream();
+            	}
+            	
+                //BookInputStream bis = _file.getInputStream();
+//                try {
                     bis.seek(_page, 0);
                     bis.readFully(_cache, 0, _cache.length);
-                } finally {
-                    bis.close();
-                }
+//                } finally {
+//                    bis.close();
+//                }
                 _cachePage = _page;
 
                 if (_entryIndex == 0) {
@@ -622,7 +643,22 @@ public class SingleWordSearcher implements Searcher {
             _page++;
             _entryIndex = 0;
         }
+//        }finally {
+//        	if(bis!=null){
+//        		bis.close();
+//        	}
+//        }
         return null;
+    }
+    
+    /**
+     * 利用したInputStreamをすべて閉じる。
+     */
+    public void close() {
+    	if(bis != null) {
+    		bis.close();
+    		bis = null;
+    	}
     }
 
     /**

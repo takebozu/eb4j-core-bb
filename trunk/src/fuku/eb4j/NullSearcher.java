@@ -25,6 +25,10 @@ public class NullSearcher implements Searcher {
     public Result getNextResult() throws EBException {
         return null;
     }
+    
+    public void close() {
+    	//nothing to do
+    }
 }
 
 // end of NullSearcher.java

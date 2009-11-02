@@ -95,17 +95,12 @@ public abstract class BookInputStream {
      * @exception EBException 入出力エラーが発生した場合
      */
     protected void open() throws EBException {
-        if (stream != null) {
-            close();
-        }
+    	close();
 
         try {
             stream = new RandomAccessFile(info.getFile(), "r");
         } catch (FileNotFoundException e) {
-            EBException exp =
-                new EBException(EBException.FILE_NOT_FOUND, info.getPath() + ":" + e.getMessage());
-            //exp.setStackTrace(e.getStackTrace());
-            throw exp;
+            throw new EBException(EBException.FILE_NOT_FOUND, info.getPath() + ":" + e.getMessage());
         }
         filePos = 0;
     }
@@ -118,6 +113,7 @@ public abstract class BookInputStream {
         if (stream != null) {
             try {
                 stream.close();
+                stream = null;
             } catch (IOException e) {
             }
         }

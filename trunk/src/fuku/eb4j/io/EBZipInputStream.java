@@ -1,8 +1,11 @@
 package fuku.eb4j.io;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 import net.cloudhunter.bb.EBLogger;
+import net.cloudhunter.compat.java.io.FileNotFoundException;
+import net.cloudhunter.compat.java.io.RandomAccessFile;
 import net.cloudhunter.compat.java.util.zip.DataFormatException;
 import net.cloudhunter.compat.java.util.zip.Inflater;
 import net.rim.device.api.system.EventLogger;
@@ -19,6 +22,14 @@ import fuku.eb4j.util.ByteUtil;
 public class EBZipInputStream
     extends BookInputStream implements EBZipConstants {
 
+	/** 
+	 * パフォーマンス改善のために追加した入力ストリーム。
+	 * インデックスデータをstreamで読み、ファイル位置が大きく異なることが多いデータはこのstream2で読む。
+	 * InputStream#skipが、通常のJavaにおけるseek()に比べて極端に遅いことへの対応。 
+	 */
+    protected RandomAccessFile stream2 = null;
+
+
     /**
      * コンストラクタ。
      *
@@ -32,6 +43,54 @@ public class EBZipInputStream
         cache = new byte[info.getSliceSize()];
     }
 
+
+    /**
+     * このファイルを開きます。
+     *
+     * @exception EBException 入出力エラーが発生した場合
+     */
+    protected void open() throws EBException {
+    	super.open();
+
+        try {
+            stream2 = new RandomAccessFile(info.getFile(), "r");
+        } catch (FileNotFoundException e) {
+            throw new EBException(EBException.FILE_NOT_FOUND, info.getPath() + ":" + e.getMessage());
+        }
+    }
+    
+    /**
+     * このファイルを閉じます。
+     *
+     */
+    public void close() {
+        super.close();
+        if (stream2 != null) {
+            try {
+                stream2.close();
+                stream2 = null;
+            } catch (IOException e) {
+            }
+        }
+    }
+
+    /**
+     * このファイルからlenバイトのデータをバイト配列に読み込みます。
+     *
+     * @param b データの読み込み先のバッファ
+     * @param off データの開始オフセット
+     * @param len 読み込まれる最大バイト数
+     * @exception EBException 入出力エラーが発生した場合
+     */
+    protected void readRawFully2(byte[] b, int off, int len) throws EBException {
+        try {
+            stream2.readFully(b, off, len);
+        } catch (EOFException e) {
+            throw new EBException(EBException.FAILED_READ_FILE, info.getPath(), e);
+        } catch (IOException e) {
+            throw new EBException(EBException.FAILED_READ_FILE, info.getPath(), e);
+        }
+    }
 
     /**
      * EBZIP形式のファイル情報を初期化します。
@@ -103,6 +162,7 @@ public class EBZipInputStream
      */
 //    @Override
     public int read(byte[] b, int off, int len) throws EBException {
+    	EBLogger.log("[S]read");
         int rlen = 0;
         while (rlen < len) {
             if (info.getFileSize() <= filePos) {
@@ -134,8 +194,10 @@ public class EBZipInputStream
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 byte[] buf = new byte[info.getZipIndexSize()*2];
+                EBLogger.log("[S]read.readFully");
                 readRawFully(buf, 0, buf.length);
-
+                EBLogger.log("[E]read.readFully");
+                
                 // スライス位置の取得
                 long slicePos = 0L;
                 long nextSlicePos = 0L;
@@ -164,7 +226,8 @@ public class EBZipInputStream
 
                 // 圧縮スライスをデコードしてキャッシュに読み込む
                 try {
-                    stream.seek(slicePos);
+                	EBLogger.log("[S}read.seek");
+                    stream2.seek(slicePos);
                 } catch (IOException e) {
                 	EBLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
@@ -195,15 +258,16 @@ public class EBZipInputStream
      * @exception EBException 入出力エラーが発生した場合
      */
     private void _decode(int size) throws EBException {
+    	EBLogger.log("[S]_decode");
         if (size == info.getSliceSize()) {
             // 圧縮されていないのでそのままキャッシュに読み込む
-            readRawFully(cache, 0, size);
+            readRawFully2(cache, 0, size);
         } else {
             byte[] b = new byte[size];
             Inflater inf = new Inflater();
             try {
                 // 圧縮されたスライスをキャッシュに展開する
-                readRawFully(b, 0, size);
+                readRawFully2(b, 0, size);
                 inf.setInput(b, 0, size);
                 inf.inflate(cache, 0, info.getSliceSize());
             } catch (DataFormatException e) {
@@ -212,6 +276,7 @@ public class EBZipInputStream
                 inf.end();
             }
         }
+        EBLogger.log("[E]_decode");
     }
 }
 

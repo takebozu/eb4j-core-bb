@@ -6,7 +6,9 @@ import java.io.IOException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
+import net.cloudhunter.bb.EBLogger;
 import net.cloudhunter.bb.URLUTF8Encoder;
+import net.rim.device.api.system.EventLogger;
 
 public class RandomAccessFile {
 	private FileConnection _conn = null;
@@ -19,7 +21,7 @@ public class RandomAccessFile {
 	public RandomAccessFile(File file, String mode) throws FileNotFoundException {
 		try {
 			_path = file.getPath();
-			//System.out.println("Opening RandomAccessFile:" + _path);
+			EBLogger.log("Opening RandomAccessFile:" + URLUTF8Encoder.encode(_path), EventLogger.DEBUG_INFO);
 			_conn = (FileConnection)Connector.open(URLUTF8Encoder.encode(_path), Connector.READ);
 			if(!_conn.exists()) {
 				throw new FileNotFoundException(_path);
@@ -41,22 +43,31 @@ public class RandomAccessFile {
      
      public void seek(long pos) throws IOException {
     	 if(currentPos < pos) {
+    		 EBLogger.log("[S]RAF skip1:pos=" + pos + ",currentPos=" + currentPos);
+    		 //TODO 差が大きいとパフォーマンスが著しく悪い
     		 _stream.skip(pos - currentPos);
+    		 EBLogger.log("[E]RAF skip1");
     	 } else if (currentPos > pos) {
     		 if(_stream.markSupported() && pos < Integer.MAX_VALUE) {
+    			 EBLogger.log("[S]RAF reset:pos=" + pos + ",currentPos=" + currentPos);
     			 _stream.reset();
+    			 EBLogger.log("[E]RAF reset");
     		 } else {
+    			 EBLogger.log("[S]RAF close&open:pos=" + pos + ",currentPos=" + currentPos);
     			 _stream.close();
     			 _stream = _conn.openDataInputStream();
+    			 EBLogger.log("[E]RAF close&open");
     		 }
+    		 EBLogger.log("[S]RAF skip2");
 			 _stream.skip(pos);
+			 EBLogger.log("[E]RAF skip2");
     	 }
 		 currentPos = pos;
      }
      
      
 	public void close() throws IOException {
-		//System.out.println("Closing RandomAccessFile:" + _path);
+		EBLogger.log("Closing RandomAccessFile:" + URLUTF8Encoder.encode(_path), EventLogger.DEBUG_INFO);
 		currentPos = 0;
 		if(_stream != null) {
 			_stream.close();

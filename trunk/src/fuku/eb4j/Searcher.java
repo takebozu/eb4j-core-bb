@@ -14,6 +14,12 @@ public interface Searcher {
      * @exception EBException 検索中にエラーが発生した場合
      */
     Result getNextResult() throws EBException;
+    
+    /**
+     * 利用したInputStreamをすべて閉じる。
+     * 現在のSeacherの利用を終了するには必ず呼び出す必要がある。
+     */
+    void close();
 }
 
 // end of Searcher.java
