@@ -162,7 +162,6 @@ public class EBZipInputStream
      */
 //    @Override
     public int read(byte[] b, int off, int len) throws EBException {
-    	EBLogger.log("[S]read");
         int rlen = 0;
         while (rlen < len) {
             if (info.getFileSize() <= filePos) {
@@ -194,9 +193,7 @@ public class EBZipInputStream
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 byte[] buf = new byte[info.getZipIndexSize()*2];
-                EBLogger.log("[S]read.readFully");
                 readRawFully(buf, 0, buf.length);
-                EBLogger.log("[E]read.readFully");
                 
                 // スライス位置の取得
                 long slicePos = 0L;
@@ -226,7 +223,6 @@ public class EBZipInputStream
 
                 // 圧縮スライスをデコードしてキャッシュに読み込む
                 try {
-                	EBLogger.log("[S}read.seek");
                     stream2.seek(slicePos);
                 } catch (IOException e) {
                 	EBLogger.log("Failed to seek file", EventLogger.ERROR);
@@ -258,7 +254,6 @@ public class EBZipInputStream
      * @exception EBException 入出力エラーが発生した場合
      */
     private void _decode(int size) throws EBException {
-    	EBLogger.log("[S]_decode");
         if (size == info.getSliceSize()) {
             // 圧縮されていないのでそのままキャッシュに読み込む
             readRawFully2(cache, 0, size);
@@ -276,7 +271,6 @@ public class EBZipInputStream
                 inf.end();
             }
         }
-        EBLogger.log("[E]_decode");
     }
 }
 

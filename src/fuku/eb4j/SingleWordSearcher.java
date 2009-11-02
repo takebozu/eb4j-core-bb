@@ -158,7 +158,6 @@ public class SingleWordSearcher implements Searcher {
      *         キーがパターンより小さい場合:-1以下
      */
     private int _comparePre(byte[] key, byte[] pattern) {
-    	EBLogger.log("[S]_comparePre", EventLogger.DEBUG_INFO);
         int comp = 0;
         switch (_type) {
             case EXACTWORD:
@@ -193,7 +192,6 @@ public class SingleWordSearcher implements Searcher {
 //                       + new String(pattern, "x-JIS0208") + "'");
 //        } catch (UnsupportedEncodingException e) {
 //        }
-        EBLogger.log("[E]_comparePre", EventLogger.DEBUG_INFO);
         return comp;
     }
 
@@ -346,13 +344,10 @@ public class SingleWordSearcher implements Searcher {
 //        try {
             long nextPage = _page;
             int depth;
-            EBLogger.log("[S]Index loop", EventLogger.DEBUG_INFO);
             for (depth=0; depth<MAX_INDEX_DEPTH; depth++) {
                 // データをキャッシュへ読み込む
                 bis.seek(_page, 0);
-                EBLogger.log("[S]search.readFully");
                 bis.readFully(_cache, 0, _cache.length);
-                EBLogger.log("[E]search.readFully");
                 _cachePage = _page;
 
                 _pageID = _cache[0] & 0xff;

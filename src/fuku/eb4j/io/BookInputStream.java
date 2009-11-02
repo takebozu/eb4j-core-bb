@@ -95,8 +95,6 @@ public abstract class BookInputStream {
      * @exception EBException 入出力エラーが発生した場合
      */
     protected void open() throws EBException {
-    	close();
-
         try {
             stream = new RandomAccessFile(info.getFile(), "r");
         } catch (FileNotFoundException e) {
