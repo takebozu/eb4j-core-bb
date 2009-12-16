@@ -111,6 +111,14 @@ public class Result {
     public Object getText(Hook hook) throws EBException {
         return _sub.getText(_text, hook);
     }
+    
+    /**
+     * 検索の対象となっている副本を取得する。
+     * @return 副本
+     */
+    public SubBook getSubBook() {
+    	return _sub;
+    }
 }
 
 // end of Result.java
