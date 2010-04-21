@@ -3,14 +3,12 @@ package fuku.eb4j.io;
 import java.io.EOFException;
 import java.io.IOException;
 
-import net.cloudhunter.bb.EBLogger;
+import net.cloudhunter.bb.util.BasicLogger;
 import net.cloudhunter.compat.java.io.FileNotFoundException;
 import net.cloudhunter.compat.java.io.RandomAccessFile;
 import net.cloudhunter.compat.java.util.zip.DataFormatException;
 import net.cloudhunter.compat.java.util.zip.Inflater;
 import net.rim.device.api.system.EventLogger;
-
-
 import fuku.eb4j.EBException;
 import fuku.eb4j.util.ByteUtil;
 
@@ -189,7 +187,7 @@ public class EBZipInputStream
                 try {
                     stream.seek(pos);
                 } catch (IOException e) {
-                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
+                	BasicLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 byte[] buf = new byte[info.getZipIndexSize()*2];
@@ -225,7 +223,7 @@ public class EBZipInputStream
                 try {
                     stream2.seek(slicePos);
                 } catch (IOException e) {
-                	EBLogger.log("Failed to seek file", EventLogger.ERROR);
+                	BasicLogger.log("Failed to seek file", EventLogger.ERROR);
                     throw new EBException(EBException.FAILED_SEEK_FILE, info.getPath(), e);
                 }
                 _decode(sliceSize);
