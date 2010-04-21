@@ -1,6 +1,6 @@
 package fuku.eb4j;
 
-import net.cloudhunter.bb.EBLogger;
+import net.cloudhunter.bb.util.BasicLogger;
 import net.cloudhunter.compat.java.io.File;
 import net.cloudhunter.compat.java.util.ArrayList;
 import net.cloudhunter.compat.java.util.List;
@@ -121,7 +121,7 @@ public class Book {
         _loadLanguage(bookDir);
         _loadCatalog(bookDir);
         
-        EBLogger.log("Character set:" + getIANAName() + ", Path:" + _bookPath);
+        BasicLogger.log("Character set:" + getIANAName() + ", Path:" + _bookPath);
 
         // 付録パッケージの設定
         if (appendixDir != null) {
@@ -306,7 +306,7 @@ public class Book {
                 	subBooks.add(new SubBook(this, title, name, 1, fname, format, null, null));
                 } catch(EBException e) {
                 	//ディレクトリが存在しないなどの理由で、副本の初期化に失敗した場合
-                	EBLogger.log("Skipped sub book\nDir:" + name + ", Catalog file:" + file.getPath(), EventLogger.WARNING);
+                	BasicLogger.log("Skipped sub book\nDir:" + name + ", Catalog file:" + file.getPath(), EventLogger.WARNING);
                 }
             }
         } finally {
@@ -314,7 +314,7 @@ public class Book {
         }
 
         if(subBooks.size() == 0) {
-        	EBLogger.log("No sub book directory found\nCatalog file:" + file.getPath(), EventLogger.ERROR);
+        	BasicLogger.log("No sub book directory found\nCatalog file:" + file.getPath(), EventLogger.ERROR);
         	throw new EBException(EBException.DIRS_IN_CATALOG_NOT_FOUND);
         }
         _sub = (SubBook[])subBooks.toArray(new SubBook[subBooks.size()]);
@@ -451,7 +451,7 @@ public class Book {
                 } catch(EBException e) {
                 	//ディレクトリが存在しないなどの理由で、副本の初期化に失敗した場合
                 	//⇒その副本はスキップする
-                	EBLogger.log("Skipped sub book\nDir:" + name + ", Catalogs file:" + file.getPath(), EventLogger.WARNING);
+                	BasicLogger.log("Skipped sub book\nDir:" + name + ", Catalogs file:" + file.getPath(), EventLogger.WARNING);
                 }
             }
         } finally {
@@ -459,7 +459,7 @@ public class Book {
         }
         
         if(subBooks.size() == 0) {
-        	EBLogger.log("No sub book directory found\nCatalogs file:" + file.getPath(), EventLogger.ERROR);
+        	BasicLogger.log("No sub book directory found\nCatalogs file:" + file.getPath(), EventLogger.ERROR);
         	throw new EBException(EBException.DIRS_IN_CATALOG_NOT_FOUND);
         }
         _sub = (SubBook[])subBooks.toArray(new SubBook[subBooks.size()]);

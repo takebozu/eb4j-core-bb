@@ -7,8 +7,8 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
 
-import net.cloudhunter.bb.EBLogger;
-import net.cloudhunter.bb.URLUTF8Encoder;
+import net.cloudhunter.bb.util.BasicLogger;
+import net.cloudhunter.bb.util.URLUTF8Encoder;
 import net.cloudhunter.compat.java.io.File;
 import net.cloudhunter.compat.java.util.ArrayList;
 import net.cloudhunter.compat.org.apache.commons.lang.StringUtils;
@@ -247,7 +247,7 @@ public class SubBook {
                 		_fonts[i].setNarrowFont(file, 1);
                 	} catch(EBException e) {
                 		//ファイルが見つからない場合はスルーする
-                		EBLogger.log("Font file not found\nFile:" + narrow[i] + ", Dir:" + gaijiDir.getPath(), EventLogger.WARNING);
+                		BasicLogger.log("Font file not found\nFile:" + narrow[i] + ", Dir:" + gaijiDir.getPath(), EventLogger.WARNING);
                 	}
                 }
                 if (wide[i] != null) {
@@ -256,7 +256,7 @@ public class SubBook {
                 		_fonts[i].setWideFont(file, 1);
                 	} catch(EBException e) {
                 		//ファイルが見つからない場合はスルーする
-                		EBLogger.log("Font file not found\nFile:" + wide[i] + ", Dir:" + gaijiDir.getPath(), EventLogger.WARNING);
+                		BasicLogger.log("Font file not found\nFile:" + wide[i] + ", Dir:" + gaijiDir.getPath(), EventLogger.WARNING);
                 	}
                 }
             }
@@ -374,7 +374,7 @@ public class SubBook {
 		}
 		
 		_unicodeMap = result;
-		EBLogger.log((_name + ".map").substring(1) + " initialized:" + result.size() + " mappings");
+		BasicLogger.log((_name + ".map").substring(1) + " initialized:" + result.size() + " mappings");
     }
     
     public Hashtable getUnicodeMap() {

@@ -5,13 +5,12 @@ package fuku.eb4j;
 //import org.apache.commons.logging.LogFactory;
 //import org.apache.commons.logging.Log;
 
-import net.cloudhunter.bb.EBLogger;
+import net.cloudhunter.bb.util.BasicLogger;
 import net.rim.device.api.system.EventLogger;
-import fuku.eb4j.io.EBFile;
 import fuku.eb4j.io.BookInputStream;
+import fuku.eb4j.io.EBFile;
 import fuku.eb4j.util.ByteUtil;
 import fuku.eb4j.util.CompareUtil;
-//import fuku.eb4j.util.HexUtil;
 
 /**
  * 単一検索語検索クラス。
@@ -369,7 +368,7 @@ public class SingleWordSearcher implements Searcher {
 
                 // 次のレベルのインデックスを取得する
                 byte[] b = new byte[_entryLength];
-                EBLogger.log("[S]Entry loop", EventLogger.DEBUG_INFO);
+                BasicLogger.log("[S]Entry loop", EventLogger.DEBUG_INFO);
                 for (_entryIndex=0; _entryIndex<_entryCount; _entryIndex++) {
                     if (_off + _entryLength + 4 > BookInputStream.PAGE_SIZE) {
                         throw new EBException(EBException.UNEXP_FILE, _file.getPath());

@@ -3,6 +3,7 @@
 	<name>eb4j_core_bb</name>
 	<comment></comment>
 	<projects>
+		<project>net_cloudhunter_core_framework</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
