@@ -239,6 +239,22 @@ public class ByteUtil {
         ret += (b[offset+3] & 0xffL);
         return ret;
     }
+    
+    /**
+     * 指定された配列から5バイトをlong型に変換します。
+     *
+     * @param b バイト配列
+     * @param offset 変換開始位置
+     * @return 変換した数値
+     */
+    public static long getLong5(byte[] b, int offset) {
+        long ret = (b[offset] & 0xffL) << 32;
+        ret += ((b[offset+1] & 0xffL) << 24);
+        ret += ((b[offset+2] & 0xffL) << 16);
+        ret += ((b[offset+3] & 0xffL) << 8);
+        ret += (b[offset+4] & 0xffL);
+        return ret;
+    }
 
     /**
      * 指定された配列から4バイトをリトルエンディアンでlong型に変換します。
