@@ -21,6 +21,8 @@ public class FileInfo {
     /** スライスサイズ */
     private int _sliceSize = BookInputStream.PAGE_SIZE;
 
+    /** ZIPモード (for EBZIP) */
+    private int _zipMode = 1;
     /** 圧縮レベル (for EBZIP) */
     private int _zipLevel = 0;
     /** インデックスサイズ (for EBZIP) */
@@ -163,6 +165,22 @@ public class FileInfo {
      */
     protected void setSliceSize(int size) {
         _sliceSize = size;
+    }
+    
+    /**
+     * 圧縮モードを返します。
+     * @return
+     */
+    protected int getZipMode() {
+    	return _zipMode;
+    }
+    
+    /**
+     * 圧縮モードをセットします。
+     * @param mode 元の (非圧縮時の) ファイルの大きさが 4,294,967,295 バイト以内のときは 1、それより大きいときは 2
+     */
+    protected void setZipMode(int mode) {
+    	_zipMode = mode;
     }
 
     /**

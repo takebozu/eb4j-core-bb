@@ -107,23 +107,30 @@ public class EBZipInputStream
         byte[] b = new byte[EBZIP_HEADER_SIZE];
         readRawFully(b, 0, b.length);
 
+        info.setZipMode(b[5] >>> 4);
         info.setZipLevel(b[5] & 0x0f);
         info.setSliceSize(PAGE_SIZE << info.getZipLevel());
-        info.setFileSize(ByteUtil.getLong4(b, 10));
+        if(info.getZipMode() == EBFile.FORMAT_EBZIP) {
+        	info.setFileSize(ByteUtil.getLong4(b, 10));
+        } else {
+        	info.setFileSize(ByteUtil.getLong5(b, 9));
+        }
         info.setZipCRC(ByteUtil.getLong4(b, 14));
 
-        if (info.getFileSize() < (1<<16)) {
+        if (info.getFileSize() < (1L<<16)) {
             info.setZipIndexSize(2);
-        } else if (info.getFileSize() < (1<<24)) {
+        } else if (info.getFileSize() < (1L<<24)) {
             info.setZipIndexSize(3);
-        } else {
+        } else if (info.getFileSize() < (1L<<32)) {
             info.setZipIndexSize(4);
+        } else {
+            info.setZipIndexSize(5);
         }
 
         // 妥当性の検証
         String str = new String(b, 0, 5);
         if (!str.equals("EBZip")
-            || (b[5] >>> 4) != EBFile.FORMAT_EBZIP
+            || (info.getZipMode() != 1 && info.getZipMode() != 2)	//1:4GB(4,294,967,295byte)以下、2:4GB超
             || info.getSliceSize() > (PAGE_SIZE << EBZIP_MAX_LEVEL)) {
             throw new EBException(EBException.UNEXP_FILE, info.getPath());
         }
@@ -208,6 +215,10 @@ public class EBZipInputStream
                     case 4:
                         slicePos = ByteUtil.getLong4(buf, 0);
                         nextSlicePos = ByteUtil.getLong4(buf, 4);
+                        break;
+                    case 5:
+                        slicePos = ByteUtil.getLong5(buf, 0);
+                        nextSlicePos = ByteUtil.getLong5(buf, 5);
                         break;
                     default:
                         break;
