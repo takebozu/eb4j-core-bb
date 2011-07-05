@@ -21,7 +21,7 @@ public class BookReader {
     private static final int HEADING = 1;
 
     /** 読み込み時のブロックサイズ */
-    private static final int BLOCK_SIZE = 32;
+    private static final int BLOCK_SIZE = 64;
 
     /** 副本 */
     private SubBook _sub = null;
