@@ -878,7 +878,16 @@ public class BookReader {
                         // 外字
                         int code = ByteUtil.getInt2(b, off);
                         if (!skip) {
-                            _hook.append(code);
+                        	String str = null; 
+                        	if(unicodeMap != null) {
+                        		Integer key = new Integer(((high | 0x80) << 8) + low);
+                        		str = (String)unicodeMap.get(key);
+                        	}
+                        	if(str == null) {
+                        		_hook.append(code);
+                        	} else {
+                        		_hook.append(str);
+                        	}
                         }
                     }
                 }

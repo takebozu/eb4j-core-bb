@@ -327,7 +327,7 @@ public class SubBook {
 					} else if(!isIgnoring && key != null && value == null && (buf[i] == '\t' || buf[i] == '\r' || buf[i] == '\n')) {
 						value = new String(buf, prevPos + 1, i - prevPos - 1);
 					} else if(buf[i] == '\r' || buf[i] == '\n') {
-						if(key != null && value != null && value.charAt(0) == 'u') {
+						if(key != null && value != null && !"".equals(value) && value.charAt(0) == 'u') {
 							Integer saveKey = Integer.valueOf(key.substring(1), 16);
 							String saveValue = null;
 							int comma = value.indexOf(',');
