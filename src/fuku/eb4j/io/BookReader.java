@@ -33,9 +33,13 @@ public class BookReader {
     private Hook _hook = null;
     /** ストップコード */
     private int _autoStopCode = -1;
+    /** ストップコードの何回の出現で停止するか　*/
+    private int _stopCodeMaxCount = 1;
+    /** ストップコードを何回読んだか */
+    private int _readStopCode = 0;
     /** スキップコード */
     private int _skipCode = -1;
-
+    
 
     /**
      * コンストラクタ。
@@ -50,6 +54,12 @@ public class BookReader {
         _file = sub.getTextFile();
         _bis = _file.getInputStream();
         _hook = hook;
+        
+        //個別辞書ごとの設定
+        if("ジーニアス英和大辞典".equals(sub.getTitle())) {
+        	_autoStopCode = 0x0100;
+        	_stopCodeMaxCount = 2;
+        }
     }
 
 
@@ -932,7 +942,11 @@ public class BookReader {
             return _sub.getSubAppendix().isStopCode(code0, code1);
         } else {
             if (code0 == 0x1f41 && code1 == _autoStopCode) {
-                return true;
+            	_readStopCode++;
+                //return true;
+            }
+            if(_readStopCode >= _stopCodeMaxCount) {
+            	return true;
             }
         }
         return false;
